@@ -1,0 +1,2098 @@
+<title>Ink &amp; Malice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@700;800&family=Alegreya+Sans:wght@400;500;700;800&family=IM+Fell+English+SC&display=swap">
+<style>
+:root {
+  /* Layout: a card table seen from above. Rivals across the top, the duel in the middle, your hand at the bottom, the chronicle at the side. */
+  --felt: #15211d;
+  --felt-2: #1c2c26;
+  --felt-3: #263d34;
+  --line: #3a5247;
+  --text: #ece4d1;
+  --muted: #a3ae9f;
+  --parch: #f3e9d2;
+  --parch-2: #dfcda5;
+  --parch-edge: #b49b6c;
+  --ink: #221c17;
+  --brass: #c9a55c;
+  --brass-hi: #ead293;
+  --wax: #9d2633;
+  --wax-hi: #d0525e;
+  --good: #8cc79a;
+  --f-display: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
+  --f-glyph: "Alegreya SC", Georgia, "Times New Roman", serif;
+  --f-body: "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+  --g: 54px;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { margin: 0; background: radial-gradient(120% 80% at 50% 0%, var(--felt-3) 0%, var(--felt) 62%) fixed, var(--felt); color: var(--text); font: 16px/1.45 var(--f-body); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1220px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 14px 48px; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+.eyebrow { display: block; font: 700 11px/1.2 var(--f-body); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
+.brand { font: 28px/1 var(--f-display); color: var(--brass-hi); letter-spacing: .02em; }
+.brand span { color: var(--wax-hi); }
+.top-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.chip { font: 700 12px/1 var(--f-body); letter-spacing: .1em; text-transform: uppercase; padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); }
+.chip.warn { color: var(--wax-hi); border-color: var(--wax); }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font: 800 15px/1.1 var(--f-body); letter-spacing: .02em; padding: 11px 16px; border-radius: 9px; border: 1px solid #8f7135; background: linear-gradient(180deg, #dcbc72, #b48d42); color: #1b150d; cursor: pointer; box-shadow: 0 2px 0 #6f5525; transition: transform .1s ease, filter .1s ease; }
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translateY(1px); box-shadow: none; }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--line); box-shadow: none; }
+.btn.ghost:hover { border-color: var(--brass); }
+.btn.danger { background: linear-gradient(180deg, var(--wax-hi), var(--wax)); color: #fff2f2; border-color: #6d1520; box-shadow: 0 2px 0 #4f0f17; }
+.btn.small { padding: 7px 11px; font-size: 14px; }
+.btn:disabled { opacity: .4; cursor: not-allowed; filter: none; }
+.btn:focus-visible, button.glyph:focus-visible, .picker button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--brass-hi); outline-offset: 2px; }
+
+label, .label { font: 700 12px/1.2 var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+select, input[type=text] { font: 16px var(--f-body); color: var(--text); background: var(--felt); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; width: 100%; min-width: 0; }
+.field { display: grid; gap: 5px; }
+.check { display: flex; gap: 9px; align-items: center; text-transform: none; letter-spacing: 0; font: 500 15px var(--f-body); color: var(--text); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--brass); }
+.row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+.row > .field { flex: 1 1 120px; }
+
+.glyph { position: relative; display: inline-grid; place-items: center; width: var(--g); height: calc(var(--g) * 1.32); flex: none; padding: 0; border-radius: 8px; border: 1px solid var(--parch-edge); background: linear-gradient(165deg, var(--parch) 0%, var(--parch-2) 100%); color: var(--ink); box-shadow: 0 2px 0 #8f7650, 0 8px 16px rgba(0,0,0,.32); font-family: var(--f-glyph); user-select: none; -webkit-user-select: none; }
+.glyph::before { content: ""; position: absolute; inset: 3px; border: 1px solid rgba(110,86,50,.28); border-radius: 6px; pointer-events: none; }
+button.glyph { cursor: pointer; transition: transform .12s ease, opacity .12s ease; }
+button.glyph:hover { transform: translateY(-3px); }
+.glyph .l { font-size: calc(var(--g) * .56); font-weight: 800; line-height: 1; margin-top: -3px; }
+.glyph .v { position: absolute; right: 6px; bottom: 4px; font: 800 calc(var(--g) * .22)/1 var(--f-body); color: #6b5534; }
+.glyph.used { opacity: .22; transform: scale(.94); box-shadow: none; }
+.glyph.disc { opacity: .5; transform: rotate(-5deg) translateY(4px); outline: 2px dashed var(--wax-hi); outline-offset: 2px; }
+.glyph.gilt { background: linear-gradient(150deg, #fbeaa9 0%, #dcb553 55%, #f5df90 100%); border-color: #9a7520; }
+.glyph.gilt .v { color: #5d4512; }
+.glyph.blot { background: radial-gradient(circle at 47% 44%, #141a1f 0 33%, transparent 34%), radial-gradient(circle at 70% 66%, #141a1f 0 14%, transparent 15%), radial-gradient(circle at 26% 70%, #141a1f 0 9%, transparent 10%), radial-gradient(circle at 72% 24%, #141a1f 0 7%, transparent 8%), linear-gradient(165deg, var(--parch), var(--parch-2)); }
+.glyph.blot .l { color: var(--parch); position: relative; z-index: 1; font-size: calc(var(--g) * .4); }
+.glyph.mini { --g: 30px; box-shadow: 0 1px 0 #8f7650; }
+.glyph.mini .v { right: 3px; bottom: 2px; }
+.glyph.spent { opacity: .55; }
+.glyph.enter { animation: drop .42s cubic-bezier(.2,.8,.3,1.2) both; }
+@keyframes drop { from { transform: translateY(-22px) rotate(-7deg); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.seals { display: inline-flex; gap: 6px; }
+.seal { position: relative; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 12px/1 var(--f-display); color: #f8d9d9; background: radial-gradient(circle at 34% 30%, var(--wax-hi), var(--wax) 55%, #5c1019 100%); box-shadow: inset 0 0 0 3px rgba(0,0,0,.2), 0 2px 3px rgba(0,0,0,.45); }
+.seal.broken { color: #8c7f78; background: radial-gradient(circle at 34% 30%, #6b605b, #463d39 60%, #2e2826); }
+.seal.broken::after { content: ""; position: absolute; top: -2px; bottom: -2px; left: 45%; width: 3px; background: var(--felt-2); transform: rotate(17deg); }
+.back { width: 14px; height: 19px; border-radius: 3px; background: repeating-linear-gradient(45deg, #5d1b24 0 3px, #77232e 3px 6px); border: 1px solid rgba(201,165,92,.45); }
+
+/* Home */
+.hero { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 32px; align-items: center; padding-block: 10px 30px; }
+.hero h1 { font-size: clamp(46px, 7.4vw, 92px); line-height: .92; color: var(--brass-hi); }
+.hero h1 span { color: var(--wax-hi); }
+.lede { font-size: 19px; max-width: 32em; margin-top: 16px; }
+.lede + .lede { font-size: 16px; color: var(--muted); margin-top: 10px; }
+.demo { padding: 18px; border-radius: 16px; background: radial-gradient(130% 120% at 50% 0%, #2b443a, #1d2f28 70%); border: 1px solid var(--line); box-shadow: inset 0 0 50px rgba(0,0,0,.35); display: grid; gap: 10px; --g: 44px; }
+.demo-row { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.demo-cap { font-size: 14px; color: var(--muted); }
+.demo-cap b { color: var(--brass-hi); }
+.demo .vs { font: 20px var(--f-display); color: var(--wax-hi); padding-inline: 4px; }
+.namebar { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-bottom: 14px; }
+.namebar .field { width: min(320px, 100%); }
+.modes { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+.mode { display: grid; gap: 12px; align-content: start; padding: 18px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.18); min-width: 0; }
+.mode h2 { font-size: 27px; color: var(--brass-hi); }
+.mode > p { color: var(--muted); }
+.mode .btn { justify-self: start; }
+.hs-list { display: grid; gap: 6px; }
+.hs-item { display: flex; gap: 6px; }
+.resume { display: flex; gap: 6px; flex-wrap: wrap; }
+.note { font-size: 14px; color: var(--muted); }
+.primer { margin-top: 30px; display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap: 28px; }
+.primer h2 { font-size: 30px; color: var(--brass-hi); }
+.steps { list-style: none; counter-reset: s; padding: 0; margin: 14px 0 0; display: grid; gap: 12px; max-width: 62ch; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 10px; }
+.steps li::before { content: counter(s); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 14px/1 var(--f-display); color: #f8d9d9; background: radial-gradient(circle at 34% 30%, var(--wax-hi), var(--wax) 55%, #5c1019 100%); }
+.values { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 10px 6px; margin-top: 14px; --g: 36px; }
+.vcell { display: grid; justify-items: center; gap: 3px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Lobby */
+.lobby { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap: 16px; }
+.panel { padding: 20px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.18); display: grid; gap: 12px; align-content: start; min-width: 0; }
+.panel.gold { border-color: var(--brass); background: rgba(201,165,92,.07); }
+.panel h2 { font-size: 26px; color: var(--brass-hi); }
+.code { font: 54px/1 var(--f-glyph); letter-spacing: .14em; color: var(--brass-hi); overflow-wrap: anywhere; }
+.seats { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.seats li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.seats .r-name { min-width: 0; overflow-wrap: anywhere; }
+
+/* Game */
+.game { display: grid; grid-template-columns: minmax(0,1fr) 290px; gap: 16px; align-items: start; }
+.board { min-width: 0; display: grid; gap: 14px; }
+.rivals { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+.rival { display: grid; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(0,0,0,.18); min-width: 0; transition: border-color .2s, background .2s; }
+.rival header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; align-items: baseline; }
+.r-name { font: 20px/1.1 var(--f-display); overflow-wrap: break-word; min-width: 0; }
+.tag { font: 700 11px var(--f-body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.r-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.backs { display: flex; gap: 3px; flex-wrap: wrap; }
+.r-status { font-size: 14px; color: var(--muted); }
+.rival.active { border-color: var(--brass); background: rgba(201,165,92,.09); }
+.rival.active .r-status { color: var(--brass-hi); }
+.rival.out { opacity: .42; }
+.rival.hit { animation: hit .6s ease; }
+@keyframes hit { 0%, 100% { background: rgba(0,0,0,.18); } 30% { background: rgba(157,38,51,.45); } }
+.charm-chip { font: 700 12px var(--f-body); padding: 3px 8px; border-radius: 99px; border: 1px solid var(--brass); color: var(--brass-hi); }
+.charm-chip.spent { opacity: .5; text-decoration: line-through; }
+
+.table { position: relative; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 20px; align-items: center; padding: 20px; border-radius: 18px; background: radial-gradient(130% 120% at 50% 0%, #2c463b, #1c2e27 72%); border: 1px solid var(--line); box-shadow: inset 0 0 0 6px rgba(0,0,0,.12), inset 0 0 70px rgba(0,0,0,.38); }
+.table.shake { animation: shake .45s; }
+@keyframes shake { 0%, 100% { transform: none; } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+.dial { --p: 0; width: 118px; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--brass) calc(var(--p) * 1%), #2c4339 0); display: grid; place-items: center; box-shadow: 0 0 0 1px var(--line), 0 10px 24px rgba(0,0,0,.35); }
+.dial-in { width: 84%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 35%, var(--felt-3), var(--felt)); display: grid; place-content: center; text-align: center; gap: 2px; }
+.dial-in strong { font: 800 44px/1 var(--f-glyph); color: var(--brass-hi); font-variant-numeric: tabular-nums; }
+.center { min-width: 0; display: grid; gap: 12px; }
+.banner { font-size: 17px; min-height: 2.9em; }
+.banner b { color: var(--brass-hi); font-weight: 700; }
+.w { font-family: var(--f-glyph); font-weight: 800; letter-spacing: .06em; color: var(--parch) !important; }
+.pool { display: flex; flex-wrap: wrap; gap: 6px; min-height: calc(var(--g) * 1.32); }
+.pool.empty { align-items: center; justify-content: center; border: 1px dashed var(--line); border-radius: 10px; color: var(--muted); font-style: italic; }
+.pool-cap { font-size: 13px; color: var(--muted); }
+.sand-row { display: flex; align-items: center; gap: 10px; }
+.sand { flex: 1; height: 8px; border-radius: 99px; background: #13201b; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,.6); }
+.sand i { display: block; height: 100%; width: var(--pct, 100%); background: linear-gradient(90deg, #a8843f, var(--brass-hi)); transition: width .2s linear; }
+.sand.low i { background: linear-gradient(90deg, var(--wax), var(--wax-hi)); }
+.sand-text { font: 800 15px var(--f-body); font-variant-numeric: tabular-nums; min-width: 4.8em; text-align: right; color: var(--muted); }
+.sand.low + .sand-text { color: var(--wax-hi); }
+.well { position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; }
+.well-cards { display: flex; gap: 6px; }
+.well-cap { font-size: 12px; color: var(--muted); max-width: 8.5em; }
+.picker { position: absolute; z-index: 20; right: 0; top: 100%; margin-top: 8px; display: grid; grid-template-columns: repeat(7, 34px); gap: 4px; padding: 10px; background: var(--felt-2); border: 1px solid var(--brass); border-radius: 10px; box-shadow: 0 14px 34px rgba(0,0,0,.55); }
+.picker button { height: 34px; border-radius: 6px; border: 1px solid var(--parch-edge); background: var(--parch); color: var(--ink); font: 800 16px var(--f-glyph); cursor: pointer; }
+.picker button:hover { background: #fff6e2; }
+.over { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; text-align: center; background: rgba(12,20,17,.88); border-radius: 18px; padding: 20px; z-index: 5; }
+.over h2 { font-size: clamp(28px, 4vw, 42px); color: var(--brass-hi); }
+
+.me { display: grid; gap: 12px; padding: 16px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.16); min-width: 0; }
+.me.turn { border-color: var(--brass); box-shadow: 0 0 0 1px rgba(201,165,92,.25); }
+.me-head { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; }
+.me-head > div { display: grid; gap: 6px; }
+.me-name { font: 22px/1.1 var(--f-display); }
+.composer { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: calc(var(--g) * 1.32 + 22px); padding: 10px; border-radius: 12px; border: 1px dashed var(--brass); background: rgba(0,0,0,.2); }
+.composer.nudge { animation: shake .35s; }
+.composer .ph { color: var(--muted); font-style: italic; padding-left: 4px; }
+.preview { font-size: 15px; min-height: 1.4em; }
+.preview .st { margin-left: 8px; font-weight: 800; }
+.preview.good .st { color: var(--good); }
+.preview.bad, .preview.bad .st { color: var(--wax-hi); }
+.preview.warn .st { color: var(--brass-hi); }
+.hand { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.keys { font-size: 13px; color: var(--muted); }
+.charm { display: grid; gap: 4px; padding: 8px 12px; border: 1px solid var(--brass); border-radius: 10px; max-width: 280px; background: rgba(201,165,92,.08); }
+.charm b { font: 18px/1.1 var(--f-display); color: var(--brass-hi); font-weight: 400; }
+.charm small { font-size: 13px; color: var(--muted); }
+.charm.spent { opacity: .5; border-style: dashed; }
+.coach { background: var(--parch); color: var(--ink); border-radius: 4px; padding: 10px 14px; transform: rotate(-.4deg); box-shadow: 0 6px 16px rgba(0,0,0,.35); max-width: 62ch; }
+.coach .eyebrow { color: #7a6542; }
+.coach .w { color: var(--wax) !important; }
+.spectate h3 { font-size: 22px; color: var(--brass-hi); }
+
+.chron { min-width: 0; padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(0,0,0,.16); position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 40px); overflow: auto; }
+.chron h3 { font-size: 20px; color: var(--brass-hi); }
+.chron ol { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
+.chron li { padding-bottom: 8px; border-bottom: 1px solid rgba(58,82,71,.6); color: var(--muted); }
+.chron li:first-child { color: var(--text); }
+.chron li.k-seal, .chron li.k-out { color: var(--wax-hi); }
+.chron li.k-win { color: var(--brass-hi); }
+
+.overlay { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: rgba(9,15,13,.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.sheet { width: min(760px, 100%); max-height: 100%; overflow: auto; padding: 24px; border-radius: 16px; background: var(--felt-2); border: 1px solid var(--brass); box-shadow: 0 20px 50px rgba(0,0,0,.5); display: grid; gap: 14px; }
+.sheet h2 { font-size: 34px; color: var(--brass-hi); }
+.sheet h3 { font-size: 22px; color: var(--brass-hi); margin-top: 6px; }
+.sheet ul, .sheet ol { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
+.sheet .close { justify-self: end; }
+.cover-card { width: min(460px, 100%); text-align: center; justify-items: center; }
+.cover-card h2 { font-size: 44px; }
+
+#toast { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: var(--parch); color: var(--ink); padding: 10px 16px; border-radius: 10px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,.45); transition: opacity .2s, transform .2s; z-index: 60; width: max-content; max-width: min(92vw, 520px); text-align: center; }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast.bad { background: var(--wax-hi); color: #fff; }
+
+@media (max-width: 960px) {
+  .game { grid-template-columns: minmax(0,1fr); }
+  .chron { position: static; max-height: 280px; }
+  .hero, .primer { grid-template-columns: minmax(0,1fr); }
+  .modes { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 760px) { .lobby { grid-template-columns: minmax(0,1fr); } }
+@media (max-width: 640px) {
+  :root { --g: 46px; }
+  .table { grid-template-columns: auto minmax(0,1fr); gap: 14px; padding: 14px; }
+  .well { grid-column: 1 / -1; grid-auto-flow: column; justify-content: start; align-items: center; gap: 10px; text-align: left; }
+  .picker { left: 0; right: auto; }
+  .dial { width: 88px; }
+  .dial-in strong { font-size: 32px; }
+  .banner { font-size: 16px; }
+  .rivals { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+<!--HEAD-END-->
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Ink <span>&amp;</span> Malice</div>
+    <div class="top-right" id="topRight"></div>
+  </header>
+  <main id="screen"></main>
+</div>
+<div id="cover" class="overlay" hidden></div>
+<div id="rules" class="overlay" hidden></div>
+<div id="toast" role="status"></div>
+<script type="text/plain" id="wordsData">__WORDS__</script>
+<script>
+(function () {
+'use strict';
+
+const HAND = 5;
+const DIST = { E: [12, 1], A: [8, 1], I: [7, 1], O: [7, 1], U: [4, 2], T: [7, 1], N: [6, 1], R: [6, 1], S: [6, 1], L: [5, 2], D: [4, 2], H: [3, 3], C: [3, 3], M: [3, 3], G: [3, 2], P: [2, 3], Y: [2, 3], B: [2, 4], F: [2, 4], W: [2, 4], K: [1, 5], V: [1, 5], X: [1, 7], J: [1, 8], Q: [1, 8], Z: [1, 8] };
+const GILTS = [['E', 6], ['A', 6], ['O', 6], ['I', 6], ['S', 7], ['R', 7], ['T', 7], ['N', 7], ['L', 7]];
+const CHARMS = {
+  glass: { name: 'Turned Glass', text: 'Adds 20 seconds to your timer.' },
+  fresh: { name: 'Fresh Ink', text: 'Discards your whole hand and draws 5 new glyphs.' },
+  borrow: { name: 'Borrowed Words', text: 'Draws 3 extra glyphs straight away.' },
+  nib: { name: 'Sharpened Nib', text: 'Your word this turn scores 6 extra.' },
+  twin: { name: 'Twin Quill', text: 'Your own glyphs score double in this word.' },
+  spill: { name: 'Spilt Ink', text: 'Gives you a second Inkblot for this word.' }
+};
+const CHARM_KEYS = Object.keys(CHARMS);
+const BOT_NAMES = ['Professor Wren', 'Marlowe', 'Sibyl Ash', 'Thessaly', 'Dr Pell'];
+const LEVELS = {
+  easy: { label: 'Apprentice', common: true, maxLen: 6, pick: 'low', miss: 0.15, think: [9000, 20000] },
+  normal: { label: 'Scholar', common: true, maxLen: 15, pick: 'top', miss: 0.04, think: [5000, 13000] },
+  hard: { label: 'Archmage', common: false, maxLen: 15, pick: 'best', miss: 0, think: [2500, 8000] }
+};
+const ROMAN = ['I', 'II', 'III'];
+const SEAL_NAMES = ['Gilt Seal', 'Charm Seal', 'Final Seal'];
+const TIMERS = [[30, '30 seconds'], [45, '45 seconds'], [60, '60 seconds'], [90, '90 seconds'], [0, 'No timer']];
+const CODE_ABC = 'BCDFGHJKLMNPQRSTVWXZ23456789';
+const PEER_PREFIX = 'inkmalice-v1-';
+const PEER_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js';
+const GAME_ACTS = ['ready', 'submit', 'fizzle', 'yield', 'tidy', 'curse', 'charm'];
+
+const DICT = new Set();
+let WORDS = [];
+let FLAGS = null;
+let MASKS = null;
+let wordsReady = false;
+
+function ensureWords() {
+  if (wordsReady) return;
+  const raw = document.getElementById('wordsData').textContent;
+  const lines = raw.split('\n');
+  const list = [];
+  const flags = [];
+  let prev = '';
+  for (let i = 0; i < lines.length; i++) {
+    let s = lines[i].trim();
+    if (!s) continue;
+    let f = 0;
+    if (s[0] === '!') { f = 2; s = s.slice(1); }
+    const c = s.charCodeAt(0);
+    let p;
+    if (c >= 97) { p = c - 97; } else { p = c - 65; if (f === 0) f = 1; }
+    const w = prev.slice(0, p) + s.slice(1);
+    list.push(w);
+    flags.push(f);
+    prev = w;
+  }
+  WORDS = list;
+  FLAGS = new Uint8Array(flags);
+  MASKS = new Int32Array(list.length);
+  for (let i = 0; i < list.length; i++) {
+    const w = list[i];
+    let m = 0;
+    for (let j = 0; j < w.length; j++) m |= 1 << (w.charCodeAt(j) - 97);
+    MASKS[i] = m;
+    DICT.add(w);
+  }
+  wordsReady = true;
+}
+
+function rnd(n) { return Math.floor(Math.random() * n); }
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); const x = a[i]; a[i] = a[j]; a[j] = x; } return a; }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function cleanName(n, fallback) { let s = String(n || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 18); if (!s) s = fallback; return s; }
+function popcount(x) { x = x - ((x >>> 1) & 0x55555555); x = (x & 0x33333333) + ((x >>> 2) & 0x33333333); return (((x + (x >>> 4)) & 0x0F0F0F0F) * 0x01010101) >>> 24; }
+function genCode() { let s = ''; for (let i = 0; i < 5; i++) s += CODE_ABC[rnd(CODE_ABC.length)]; return s; }
+
+/* ---------- Rules engine ---------- */
+
+function alive(st) { const out = []; st.players.forEach(function (p, i) { if (!p.out) out.push(i); }); return out; }
+function addLog(st, txt, k) { st.logN = (st.logN || 0) + 1; st.log.push({ n: st.logN, txt: txt, k: k || '' }); if (st.log.length > 80) st.log.shift(); }
+function toDiscard(st, id) { if (!st.tiles[id].g) st.discard.push(id); }
+function draw(st, p, n) {
+  for (let i = 0; i < n; i++) {
+    if (!st.deck.length) {
+      if (!st.discard.length) return;
+      st.deck = shuffle(st.discard);
+      st.discard = [];
+    }
+    p.hand.push(st.deck.pop());
+  }
+}
+function phaseLimit(st, phase) {
+  const t = st.settings.timer;
+  if (!t) return 0;
+  if (phase === 'tidy' || phase === 'curse') return Math.max(30, t) * 1000;
+  return t * 1000;
+}
+function setTurn(st, phase, seat, from, now) {
+  const prev = st.turn;
+  const p = st.players[seat];
+  let waiting = false;
+  if (st.settings.handoff && p.kind === 'human' && (!prev || prev.seat !== seat)) waiting = true;
+  const lim = phaseLimit(st, phase);
+  let deadline = 0;
+  if (!waiting && lim) deadline = now + lim;
+  let id = 1;
+  if (prev) id = prev.id + 1;
+  st.turn = { id: id, phase: phase, seat: seat, from: from, waiting: waiting, limit: lim, deadline: deadline };
+  st.fx = { bonus: 0, twin: false, blots: 0 };
+}
+function clearPool(st) {
+  st.pool.forEach(function (x) { if (typeof x.t === 'number') toDiscard(st, x.t); });
+  st.pool = [];
+  st.word = '';
+  st.malice = 0;
+  st.caster = -1;
+}
+function basePlayer(p) { return { name: p.name, kind: p.kind, level: p.level || '', client: p.client || '' }; }
+function lobbyState(hostName, settings) {
+  return { v: 1, status: 'lobby', settings: settings, players: [{ name: hostName, kind: 'human', level: '', client: Net.me }], hostClient: Net.me, acks: {}, seq: 0, log: [], logN: 0, turn: null };
+}
+function newGame(players, settings, now, prev) {
+  const tiles = [];
+  Object.keys(DIST).forEach(function (l) { for (let i = 0; i < DIST[l][0]; i++) tiles.push({ l: l, v: DIST[l][1] }); });
+  const deck = shuffle(tiles.map(function (_, i) { return i; }));
+  const gilts = shuffle(GILTS.slice());
+  const charms = shuffle(CHARM_KEYS.slice());
+  const ps = players.map(function (p, i) {
+    const g = gilts[i % gilts.length];
+    tiles.push({ l: g[0], v: g[1], g: 1 });
+    const np = basePlayer(p);
+    np.hand = [];
+    np.seals = 0;
+    np.gilt = tiles.length - 1;
+    np.giltUsed = false;
+    np.charm = charms[i % charms.length];
+    np.charmUsed = false;
+    np.out = false;
+    return np;
+  });
+  const st = { v: 1, status: 'playing', settings: settings, players: ps, tiles: tiles, deck: deck, discard: [], pool: [], word: '', malice: 0, caster: -1, turn: null, fx: { bonus: 0, twin: false, blots: 0 }, log: [], logN: 0, ev: null, evN: 0, winner: -1, seq: 0, hostClient: '', acks: {}, round: 1 };
+  if (prev) {
+    st.hostClient = prev.hostClient || '';
+    st.acks = prev.acks || {};
+    st.round = (prev.round || 0) + 1;
+    st.evN = prev.evN || 0;
+  }
+  ps.forEach(function (p) { draw(st, p, HAND); });
+  const first = rnd(ps.length);
+  addLog(st, 'The duel begins. ' + ps[first].name + ' casts first.', 'sys');
+  setTurn(st, 'cast', first, -1, now);
+  return st;
+}
+function ownUsable(st, p, id) {
+  if (p.hand.indexOf(id) >= 0) return true;
+  return id === p.gilt && p.seals >= 1 && !p.giltUsed && !p.out;
+}
+function poolIds(st) {
+  const s = new Set();
+  if (st.turn && st.turn.phase === 'counter') st.pool.forEach(function (x) { if (typeof x.t === 'number') s.add(x.t); });
+  return s;
+}
+function evalSpec(st, seat, spec) {
+  const p = st.players[seat];
+  const pids = poolIds(st);
+  const seen = new Set();
+  let word = '';
+  let score = 0;
+  let blots = 0;
+  for (let i = 0; i < spec.length; i++) {
+    const x = spec[i];
+    if (x && x.b) {
+      const L = String(x.l || '').toUpperCase();
+      if (!/^[A-Z]$/.test(L)) return { error: 'Choose a letter for the Inkblot.' };
+      blots++;
+      word += L;
+      continue;
+    }
+    const id = x && x.t;
+    if (typeof id !== 'number' || seen.has(id) || !st.tiles[id]) return { error: 'Each glyph can only be used once.' };
+    seen.add(id);
+    const own = ownUsable(st, p, id);
+    if (!own && !pids.has(id)) return { error: 'That glyph is not available to you.' };
+    word += st.tiles[id].l;
+    let v = st.tiles[id].v;
+    if (own && st.fx.twin) v = v * 2;
+    score += v;
+  }
+  if (blots > 1 + st.fx.blots) return { error: 'You only have one Inkblot.' };
+  score += st.fx.bonus;
+  return { word: word, score: score };
+}
+function checkWord(st, seat, spec) {
+  if (!Array.isArray(spec) || spec.length < 3) return { ok: false, error: 'Words need at least 3 letters.' };
+  if (spec.length > 24) return { ok: false, error: 'That word is too long.' };
+  const r = evalSpec(st, seat, spec);
+  if (r.error) return { ok: false, error: r.error };
+  if (st.settings.dict && !DICT.has(r.word.toLowerCase())) return { ok: false, word: r.word, score: r.score, error: r.word + ' is not in the dictionary.' };
+  if (st.turn.phase === 'counter' && r.score <= st.malice) return { ok: false, word: r.word, score: r.score, error: r.word + ' scores ' + r.score + '. You need more than ' + st.malice + '.' };
+  return { ok: true, word: r.word, score: r.score };
+}
+function eliminate(st, seat) {
+  const p = st.players[seat];
+  p.out = true;
+  p.hand.forEach(function (id) { toDiscard(st, id); });
+  p.hand = [];
+  p.giltUsed = true;
+  addLog(st, p.name + ' is out of the duel.', 'out');
+}
+function checkWin(st) {
+  const al = alive(st);
+  if (al.length > 1) return false;
+  st.status = 'over';
+  st.winner = al[0];
+  addLog(st, st.players[al[0]].name + ' is the last duellist standing.', 'win');
+  st.evN++;
+  st.ev = { k: 'win', n: st.evN, seat: al[0] };
+  st.turn = Object.assign({}, st.turn, { phase: 'over', deadline: 0, waiting: false });
+  return true;
+}
+function breakSeal(st, seat, attacker, now, reason) {
+  const p = st.players[seat];
+  p.seals++;
+  let why = ' could not beat ' + st.malice;
+  if (reason === 'time') why = ' ran out of time';
+  st.evN++;
+  st.ev = { k: 'seal', n: st.evN, seat: seat, seal: p.seals };
+  if (p.seals >= 3) {
+    addLog(st, p.name + why + '. Their Final Seal breaks.', 'seal');
+    const el = alive(st).filter(function (i) { return i !== seat && i !== attacker; });
+    if (el.length) { setTurn(st, 'curse', seat, attacker, now); return; }
+    eliminate(st, seat);
+    clearPool(st);
+    if (checkWin(st)) return;
+    let next = attacker;
+    if (next < 0 || st.players[next].out) next = alive(st)[0];
+    setTurn(st, 'cast', next, -1, now);
+    return;
+  }
+  if (p.seals === 1) {
+    const g = st.tiles[p.gilt];
+    addLog(st, p.name + why + '. Their Gilt Seal breaks, revealing a gilded ' + g.l + ' worth ' + g.v + '.', 'seal');
+  } else {
+    addLog(st, p.name + why + '. Their Charm Seal breaks, revealing ' + CHARMS[p.charm].name + '.', 'seal');
+  }
+  clearPool(st);
+  setTurn(st, 'cast', seat, -1, now);
+}
+function doFizzle(st, seat, now, timedOut) {
+  const p = st.players[seat];
+  clearPool(st);
+  st.caster = seat;
+  if (timedOut) addLog(st, p.name + ' ran out of time on the opening cast.', 'cast');
+  else addLog(st, p.name + ' found no opening word.', 'cast');
+  st.evN++;
+  st.ev = { k: 'fizzle', n: st.evN, seat: seat };
+  setTurn(st, 'tidy', seat, -1, now);
+}
+function finishTidy(st, seat, target, nd, now) {
+  const p = st.players[seat];
+  const tg = st.players[target];
+  let msg;
+  if (st.malice > 0) msg = p.name + ' cast ' + st.word + ' at ' + tg.name + ', who must beat ' + st.malice + '.';
+  else msg = p.name + ' challenged ' + tg.name + ' to spell any word.';
+  if (nd === 1) msg += ' ' + p.name + ' discarded 1 glyph.';
+  else if (nd > 1) msg += ' ' + p.name + ' discarded ' + nd + ' glyphs.';
+  addLog(st, msg, 'aim');
+  setTurn(st, 'counter', target, seat, now);
+}
+function doCurse(st, seat, target, now) {
+  const p = st.players[seat];
+  const tg = st.players[target];
+  addLog(st, p.name + ' flung a Parting Curse at ' + tg.name + ', who must beat ' + st.word + ' (' + st.malice + ').', 'curse');
+  eliminate(st, seat);
+  st.evN++;
+  st.ev = { k: 'curse', n: st.evN, seat: seat, target: target };
+  if (checkWin(st)) return;
+  setTurn(st, 'counter', target, seat, now);
+}
+function doTimeout(st, a, now) {
+  const t = st.turn;
+  if (a.turnId !== t.id || t.waiting || !t.deadline || now < t.deadline) return 'stale';
+  const p = st.players[t.seat];
+  if (t.phase === 'cast') {
+    doFizzle(st, t.seat, now, true);
+  } else if (t.phase === 'counter') {
+    breakSeal(st, t.seat, t.from, now, 'time');
+  } else if (t.phase === 'tidy') {
+    while (p.hand.length > HAND) toDiscard(st, p.hand.pop());
+    draw(st, p, HAND - p.hand.length);
+    const rivals = alive(st).filter(function (i) { return i !== t.seat; });
+    finishTidy(st, t.seat, rivals[rnd(rivals.length)], 0, now);
+  } else if (t.phase === 'curse') {
+    const el = alive(st).filter(function (i) { return i !== t.seat && i !== t.from; });
+    doCurse(st, t.seat, el[rnd(el.length)], now);
+  }
+  return '';
+}
+function step(st, a, now) {
+  const t = st.turn;
+  if (a.type === 'join') {
+    const name = cleanName(a.name, 'Guest');
+    const i = st.players.findIndex(function (p) { return p.client && p.client === a.client; });
+    if (i >= 0) { if (st.status === 'lobby') st.players[i].name = name; return ''; }
+    if (st.status !== 'lobby') return 'The duel has already started.';
+    if (st.players.length >= 5) return 'The room is full.';
+    st.players.push({ name: name, kind: 'human', level: '', client: String(a.client) });
+    return '';
+  }
+  if (a.type === 'addBot') {
+    if (st.status === 'playing') return 'Add bots between duels.';
+    if (st.players.length >= 5) return 'The room is full.';
+    const used = st.players.map(function (p) { return p.name; });
+    let name = BOT_NAMES.find(function (n) { return used.indexOf(n) < 0; });
+    if (!name) name = 'Bot';
+    let level = 'normal';
+    if (LEVELS[a.level]) level = a.level;
+    st.players.push({ name: name, kind: 'bot', level: level, client: '' });
+    return '';
+  }
+  if (a.type === 'removePlayer') {
+    if (st.status === 'playing') return 'Remove players between duels.';
+    if (!(a.index > 0 && a.index < st.players.length)) return 'That seat cannot be removed.';
+    st.players.splice(a.index, 1);
+    return '';
+  }
+  if (a.type === 'settings') {
+    if (st.status === 'playing') return 'Change settings between duels.';
+    if (TIMERS.some(function (x) { return x[0] === a.timer; })) st.settings.timer = a.timer;
+    if (typeof a.dict === 'boolean') st.settings.dict = a.dict;
+    return '';
+  }
+  if (st.status !== 'playing' || !t) return 'The duel is not running.';
+  if (a.type === 'timeout') return doTimeout(st, a, now);
+  const p = st.players[a.seat];
+  if (!p || t.seat !== a.seat) return 'It is not your turn.';
+  if (a.type === 'ready') {
+    if (!t.waiting) return '';
+    t.waiting = false;
+    if (t.limit) t.deadline = now + t.limit;
+    return '';
+  }
+  if (t.waiting) return 'Start your turn first.';
+  if (a.type === 'submit') {
+    if (t.phase !== 'cast' && t.phase !== 'counter') return 'You cannot cast right now.';
+    const chk = checkWord(st, a.seat, a.spec);
+    if (!chk.ok) return chk.error;
+    const used = new Set();
+    a.spec.forEach(function (x) { if (x && typeof x.t === 'number') used.add(x.t); });
+    p.hand = p.hand.filter(function (id) { return !used.has(id); });
+    if (used.has(p.gilt)) p.giltUsed = true;
+    st.pool.forEach(function (x) { if (typeof x.t === 'number' && !used.has(x.t)) toDiscard(st, x.t); });
+    st.pool = a.spec.map(function (x) { if (x.b) return { b: 1, l: String(x.l).toUpperCase() }; return { t: x.t }; });
+    st.word = chk.word;
+    st.malice = chk.score;
+    st.caster = a.seat;
+    st.evN++;
+    if (t.phase === 'counter') {
+      st.ev = { k: 'counter', n: st.evN, seat: a.seat, word: chk.word, score: chk.score };
+      addLog(st, p.name + ' countered with ' + chk.word + ' for ' + chk.score + '.', 'counter');
+    } else {
+      st.ev = { k: 'cast', n: st.evN, seat: a.seat, word: chk.word, score: chk.score };
+      addLog(st, p.name + ' spelt ' + chk.word + ' for ' + chk.score + '.', 'cast');
+    }
+    setTurn(st, 'tidy', a.seat, t.from, now);
+    return '';
+  }
+  if (a.type === 'fizzle') {
+    if (t.phase !== 'cast') return 'You can only pass on an opening cast.';
+    doFizzle(st, a.seat, now, false);
+    return '';
+  }
+  if (a.type === 'yield') {
+    if (t.phase !== 'counter') return 'There is nothing to yield to.';
+    breakSeal(st, a.seat, t.from, now, 'yield');
+    return '';
+  }
+  if (a.type === 'tidy') {
+    if (t.phase !== 'tidy') return 'You cannot choose a target right now.';
+    const disc = [];
+    (a.discard || []).forEach(function (id) { if (p.hand.indexOf(id) >= 0 && disc.indexOf(id) < 0) disc.push(id); });
+    const rest = p.hand.filter(function (id) { return disc.indexOf(id) < 0; });
+    if (rest.length > HAND) return 'Discard down to ' + HAND + ' glyphs first.';
+    const tg = st.players[a.target];
+    if (!tg || tg.out || a.target === a.seat) return 'Choose a rival who is still duelling.';
+    disc.forEach(function (id) { toDiscard(st, id); });
+    p.hand = rest;
+    draw(st, p, HAND - rest.length);
+    finishTidy(st, a.seat, a.target, disc.length, now);
+    return '';
+  }
+  if (a.type === 'curse') {
+    if (t.phase !== 'curse') return 'There is no curse to place.';
+    const tg = st.players[a.target];
+    if (!tg || tg.out || a.target === a.seat || a.target === t.from) return 'Choose a rival other than the one who broke your seal.';
+    doCurse(st, a.seat, a.target, now);
+    return '';
+  }
+  if (a.type === 'charm') {
+    if (t.phase !== 'cast' && t.phase !== 'counter') return 'Charms work while you are spelling.';
+    if (p.seals < 2 || p.charmUsed) return 'You have no charm to use.';
+    p.charmUsed = true;
+    const c = p.charm;
+    if (c === 'glass') { if (t.deadline) { t.deadline += 20000; t.limit += 20000; } }
+    else if (c === 'fresh') { p.hand.forEach(function (id) { toDiscard(st, id); }); p.hand = []; draw(st, p, HAND); }
+    else if (c === 'borrow') draw(st, p, 3);
+    else if (c === 'nib') st.fx.bonus += 6;
+    else if (c === 'twin') st.fx.twin = true;
+    else if (c === 'spill') st.fx.blots += 1;
+    addLog(st, p.name + ' used ' + CHARMS[c].name + '.', 'charm');
+    st.evN++;
+    st.ev = { k: 'charm', n: st.evN, seat: a.seat, charm: c };
+    return '';
+  }
+  return 'Unknown action.';
+}
+function reduce(st0, a, now) {
+  if (!st0 || !a || typeof a.type !== 'string') return { error: 'Unknown action.' };
+  let st;
+  if (a.type === 'start' || a.type === 'again') {
+    if (st0.status === 'playing') return { error: 'The duel is already running.' };
+    if (st0.players.length < 2) return { error: 'You need at least 2 duellists.' };
+    ensureWords();
+    st = newGame(st0.players, st0.settings, now, st0);
+  } else {
+    st = clone(st0);
+    const err = step(st, a, now);
+    if (err) return { error: err };
+  }
+  st.seq = (st0.seq || 0) + 1;
+  return { state: st };
+}
+
+/* ---------- Word search for bots and the coach ---------- */
+
+function availableFor(st, seat) {
+  const p = st.players[seat];
+  const items = [];
+  function push(id, own) {
+    let v = st.tiles[id].v;
+    if (own && st.fx.twin) v = v * 2;
+    items.push({ id: id, own: own, l: st.tiles[id].l, v: v });
+  }
+  p.hand.forEach(function (id) { push(id, true); });
+  if (p.seals >= 1 && !p.giltUsed && !p.out) push(p.gilt, true);
+  poolIds(st).forEach(function (id) { push(id, false); });
+  return items;
+}
+function searchWords(items, blots, need, bonus, common, maxLen) {
+  ensureWords();
+  const byL = [];
+  for (let i = 0; i < 26; i++) byL.push([]);
+  items.forEach(function (it) { byL[it.l.charCodeAt(0) - 65].push(it.v); });
+  let availMask = 0;
+  for (let i = 0; i < 26; i++) { byL[i].sort(function (a, b) { return b - a; }); if (byL[i].length) availMask |= 1 << i; }
+  const total = items.length + blots;
+  const want = new Int32Array(26);
+  const out = [];
+  for (let w = 0; w < WORDS.length; w++) {
+    const f = FLAGS[w];
+    if (f === 2) continue;
+    if (common && f !== 1) continue;
+    const word = WORDS[w];
+    const n = word.length;
+    if (n > total || n > maxLen) continue;
+    const miss = MASKS[w] & ~availMask;
+    if (miss && (blots === 0 || popcount(miss) > blots)) continue;
+    want.fill(0);
+    for (let i = 0; i < n; i++) want[word.charCodeAt(i) - 97]++;
+    let short = 0;
+    let score = bonus;
+    for (let i = 0; i < 26; i++) {
+      const k = want[i];
+      if (!k) continue;
+      const a = byL[i];
+      const use = Math.min(k, a.length);
+      short += k - use;
+      for (let j = 0; j < use; j++) score += a[j];
+    }
+    if (short > blots || score <= need) continue;
+    out.push({ w: w, score: score });
+  }
+  return out;
+}
+function buildSpec(items, word) {
+  const byL = {};
+  items.forEach(function (it) { if (!byL[it.l]) byL[it.l] = []; byL[it.l].push(it); });
+  Object.keys(byL).forEach(function (k) { byL[k].sort(function (x, y) { return (y.v - x.v) || (Number(x.own) - Number(y.own)); }); });
+  const spec = [];
+  word.toUpperCase().split('').forEach(function (ch) {
+    const a = byL[ch];
+    if (a && a.length) spec.push({ t: a.shift().id });
+    else spec.push({ b: 1, l: ch });
+  });
+  return spec;
+}
+function pickTarget(st, list, L) {
+  if (L === LEVELS.hard && Math.random() < 0.7) {
+    let best = list[0];
+    list.forEach(function (i) { if (st.players[i].seals > st.players[best].seals) best = i; });
+    return best;
+  }
+  return list[rnd(list.length)];
+}
+function botTidy(st, seat, L) {
+  const p = st.players[seat];
+  const hand = p.hand.map(function (id) { return { id: id, l: st.tiles[id].l, v: st.tiles[id].v }; });
+  const disc = new Set();
+  const hasU = hand.some(function (h) { return h.l === 'U'; });
+  hand.forEach(function (h) { if (h.l === 'Q' && !hasU) disc.add(h.id); });
+  const seen = {};
+  hand.forEach(function (h) { seen[h.l] = (seen[h.l] || 0) + 1; if (seen[h.l] > 2) disc.add(h.id); });
+  let keep = hand.filter(function (h) { return !disc.has(h.id); });
+  const vowels = keep.filter(function (h) { return 'AEIOU'.indexOf(h.l) >= 0; });
+  if (vowels.length > 3) vowels.slice(3).forEach(function (h) { disc.add(h.id); });
+  if (vowels.length === 0) keep.slice().sort(function (a, b) { return b.v - a.v; }).slice(0, 2).forEach(function (h) { disc.add(h.id); });
+  keep = hand.filter(function (h) { return !disc.has(h.id); }).sort(function (a, b) { return a.v - b.v; });
+  while (keep.length > HAND) disc.add(keep.pop().id);
+  const rivals = alive(st).filter(function (i) { return i !== seat; });
+  return { type: 'tidy', seat: seat, discard: Array.from(disc), target: pickTarget(st, rivals, L) };
+}
+function botAction(st, seat) {
+  const t = st.turn;
+  const p = st.players[seat];
+  let L = LEVELS[p.level];
+  if (!L) L = LEVELS.normal;
+  if (t.phase === 'tidy') return botTidy(st, seat, L);
+  if (t.phase === 'curse') {
+    const el = alive(st).filter(function (i) { return i !== seat && i !== t.from; });
+    return { type: 'curse', seat: seat, target: pickTarget(st, el, L) };
+  }
+  let need = 0;
+  if (t.phase === 'counter') need = st.malice;
+  if (t.phase === 'counter' && Math.random() < L.miss) return { type: 'yield', seat: seat };
+  const items = availableFor(st, seat);
+  const blots = 1 + st.fx.blots;
+  const res = searchWords(items, blots, need, st.fx.bonus, L.common, L.maxLen);
+  if (!res.length && p.seals >= 2 && !p.charmUsed) {
+    const c = p.charm;
+    let ok = false;
+    if (c === 'fresh' || c === 'borrow') ok = true;
+    else if (c === 'nib') ok = searchWords(items, blots, need, st.fx.bonus + 6, L.common, L.maxLen).length > 0;
+    else if (c === 'spill') ok = searchWords(items, blots + 1, need, st.fx.bonus, L.common, L.maxLen).length > 0;
+    else if (c === 'twin' && !st.fx.twin) {
+      const dbl = items.map(function (x) { let v = x.v; if (x.own) v = v * 2; return { id: x.id, own: x.own, l: x.l, v: v }; });
+      ok = searchWords(dbl, blots, need, st.fx.bonus, L.common, L.maxLen).length > 0;
+    }
+    if (ok) return { type: 'charm', seat: seat };
+  }
+  if (!res.length) {
+    if (t.phase === 'cast') return { type: 'fizzle', seat: seat };
+    return { type: 'yield', seat: seat };
+  }
+  res.sort(function (a, b) { return b.score - a.score; });
+  let pick;
+  if (L.pick === 'best') pick = res[0];
+  else if (L.pick === 'top') pick = res[rnd(Math.min(5, res.length))];
+  else { const low = res.slice(Math.floor(res.length / 2)); pick = low[rnd(low.length)]; }
+  return { type: 'submit', seat: seat, spec: buildSpec(items, WORDS[pick.w]) };
+}
+let botSpeed = 1;
+function botDelay(st) {
+  return Math.max(40, Math.round(rawBotDelay(st) * botSpeed));
+}
+function rawBotDelay(st) {
+  const t = st.turn;
+  const p = st.players[t.seat];
+  let L = LEVELS[p.level];
+  if (!L) L = LEVELS.normal;
+  if (t.phase === 'tidy') return 1100 + rnd(1400);
+  if (t.phase === 'curse') return 1600 + rnd(1200);
+  let d = L.think[0] + rnd(L.think[1] - L.think[0]);
+  if (!t.deadline) d = Math.round(d * 0.6);
+  else d = Math.min(d, Math.max(600, t.deadline - Date.now() - 1500));
+  return d;
+}
+
+/* ---------- Session and networking ---------- */
+
+const Net = { mode: 'local', kind: '', code: '', me: '', transport: null };
+let S = null;
+const UI = { screen: 'home', built: '', compose: [], disc: new Set(), turnId: -1, order: [], coach: null, coachKey: '', coachMsg: '', hintShown: false, lastEv: 0, picker: false, pending: 0, skew: 0, conn: true, confirmLeave: false, hsNames: [], botLevel: 'normal', joining: '' };
+const ONLINE = { env: 'peer', db: null, user: null, resume: [] };
+if (window.claude && typeof window.claude.use === 'function') ONLINE.env = 'cloud-pending';
+
+function loadLocal(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+function saveLocal(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+function loadPrefs() { try { const p = JSON.parse(loadLocal('im-prefs') || '{}'); if (p && typeof p === 'object') return p; } catch (e) { /* ignore */ } return {}; }
+function savePrefs(patch) { const p = Object.assign(loadPrefs(), patch); saveLocal('im-prefs', JSON.stringify(p)); }
+function localId() {
+  let id = loadLocal('im-id');
+  if (!id) { id = 'c' + Math.random().toString(36).slice(2, 12); saveLocal('im-id', id); }
+  return id;
+}
+function mySeat() {
+  if (!S || !S.players) return -1;
+  if (Net.kind === 'practice') return 0;
+  if (Net.kind === 'hotseat') {
+    if (S.status === 'over') return S.winner;
+    if (S.turn) return S.turn.seat;
+    return 0;
+  }
+  return S.players.findIndex(function (p) { return p.client === Net.me; });
+}
+function resetUI() {
+  UI.compose = []; UI.disc = new Set(); UI.turnId = -1; UI.order = []; UI.coach = null; UI.coachKey = ''; UI.coachMsg = '';
+  UI.hintShown = false; UI.lastEv = 0; UI.picker = false; UI.pending = 0; UI.skew = 0; UI.conn = true; UI.confirmLeave = false;
+  botKey = ''; clearTimeout(botTimer);
+}
+function dispatch(a) {
+  if (Net.mode === 'guest') {
+    if (Net.transport) Net.transport.send({ type: 'act', action: a });
+    UI.pending = Date.now();
+    render();
+    return;
+  }
+  applyAction(a, false);
+}
+function applyAction(a, quiet) {
+  const r = reduce(S, a, Date.now());
+  if (r.error) { if (!quiet) toast(r.error, 'bad'); return false; }
+  setState(r.state);
+  if (Net.mode === 'host' && Net.transport) Net.transport.publish();
+  return true;
+}
+function setState(ns) { const old = S; S = ns; onState(old); }
+
+function onState(old) {
+  const t = S.turn;
+  const me = mySeat();
+  let tid = -1;
+  if (t) tid = t.id;
+  if (UI.turnId !== tid) {
+    if (old && old.turn && Net.kind === 'practice' && old.turn.seat === 0 && (old.turn.phase === 'cast' || old.turn.phase === 'counter')) makeCoachMsg(old);
+    UI.turnId = tid;
+    UI.compose = [];
+    UI.disc = new Set();
+    UI.picker = false;
+    UI.hintShown = false;
+    if (t && t.seat === me && (t.phase === 'cast' || t.phase === 'counter') && Net.kind === 'practice' && UI.coachMsgTurn !== tid - 1 && UI.coachMsgTurn !== tid - 2) UI.coachMsg = '';
+  } else if (me >= 0 && S.status === 'playing' && S.players[me] && !S.players[me].out) {
+    const ids = new Set(availableFor(S, me).map(function (it) { return it.id; }));
+    UI.compose = UI.compose.filter(function (x) { return x.b || ids.has(x.t); });
+  }
+  UI.pending = 0;
+  if (S.status === 'lobby') UI.screen = 'lobby';
+  else UI.screen = 'game';
+  if (Net.mode === 'host' && Net.transport && Net.transport.kind === 'peer') saveLocal('im-host', JSON.stringify({ code: Net.code, s: S, at: Date.now() }));
+  render();
+  driveBots();
+  setTimeout(updateCoach, 30);
+}
+
+let botTimer = 0;
+let botKey = '';
+function driveBots() {
+  if (Net.mode === 'guest' || !S || S.status !== 'playing') return;
+  const t = S.turn;
+  if (!t || t.waiting) return;
+  const p = S.players[t.seat];
+  if (!p || p.kind !== 'bot') return;
+  const key = t.id + ':' + S.seq;
+  if (key === botKey) return;
+  let delay;
+  if (botKey.split(':')[0] === String(t.id)) delay = 900 + rnd(700);
+  else delay = botDelay(S);
+  botKey = key;
+  clearTimeout(botTimer);
+  const tid = t.id;
+  botTimer = setTimeout(function () {
+    if (!S || S.status !== 'playing' || S.turn.id !== tid) return;
+    const seat = S.turn.seat;
+    const a = botAction(S, seat);
+    if (applyAction(a, true)) return;
+    if (S.turn.phase === 'cast') applyAction({ type: 'fizzle', seat: seat }, true);
+    else if (S.turn.phase === 'counter') applyAction({ type: 'yield', seat: seat }, true);
+  }, delay);
+}
+
+function hostReceive(cid, m) {
+  if (!S || !cid || !m) return;
+  if (m.type === 'hello') {
+    if (!applyAction({ type: 'join', client: cid, name: m.name }, true) && Net.transport) Net.transport.publish();
+    return;
+  }
+  if (m.type === 'act' && m.action && GAME_ACTS.indexOf(m.action.type) >= 0) {
+    const seat = S.players.findIndex(function (p) { return p.client === cid; });
+    if (seat < 0 || m.action.seat !== seat) return;
+    if (!applyAction(m.action, true) && Net.transport) Net.transport.publish();
+  }
+}
+
+function loadPeerLib() {
+  if (window.Peer) return Promise.resolve();
+  return new Promise(function (res, rej) {
+    const s = document.createElement('script');
+    s.src = PEER_LIB;
+    s.onload = function () { res(); };
+    s.onerror = function () { rej(new Error('Could not load the connection library. Check your internet connection.')); };
+    document.head.appendChild(s);
+  });
+}
+function peerErrorText(e) {
+  const t = e && e.type;
+  if (t === 'peer-unavailable') return 'Could not find that room. Check the code, and make sure the host still has the page open.';
+  if (t === 'network' || t === 'server-error' || t === 'socket-error' || t === 'socket-closed') return 'Could not reach the connection service. Check your internet connection and try again.';
+  if (t === 'browser-incompatible') return 'This browser cannot make peer-to-peer connections.';
+  if (t === 'unavailable-id') return 'That room code is already in use.';
+  if (e && e.message) return e.message;
+  return 'Connection problem.';
+}
+function openPeer(id) {
+  return new Promise(function (res, rej) {
+    let p;
+    if (id) p = new window.Peer(id, { debug: 0 });
+    else p = new window.Peer({ debug: 0 });
+    let done = false;
+    p.on('open', function () { if (!done) { done = true; res(p); } });
+    p.on('error', function (e) { if (!done) { done = true; try { p.destroy(); } catch (x) { /* ignore */ } rej(e); } });
+    setTimeout(function () { if (!done) { done = true; try { p.destroy(); } catch (x) { /* ignore */ } rej(new Error('The connection service did not answer. Try again in a moment.')); } }, 12000);
+  });
+}
+async function peerHost(name, settings, resume) {
+  await loadPeerLib();
+  let peer = null;
+  let code = '';
+  for (let i = 0; i < 4 && !peer; i++) {
+    if (resume) code = resume.code;
+    else code = genCode();
+    try { peer = await openPeer(PEER_PREFIX + code); }
+    catch (e) { if (resume || !e || e.type !== 'unavailable-id') throw e; }
+  }
+  if (!peer) throw new Error('Could not create a room. Try again.');
+  const conns = new Map();
+  function sendState(c) { if (c.open && S) c.send({ type: 'state', s: S, t: Date.now() }); }
+  peer.on('connection', function (conn) {
+    conn.on('data', function (m) {
+      if (!m || typeof m !== 'object') return;
+      if (m.type === 'hello') { conns.set(conn, String(m.clientId || '')); hostReceive(conns.get(conn), m); sendState(conn); return; }
+      const cid = conns.get(conn);
+      if (cid) hostReceive(cid, m);
+    });
+    conn.on('close', function () { conns.delete(conn); });
+    conn.on('error', function () { conns.delete(conn); });
+  });
+  peer.on('disconnected', function () { try { peer.reconnect(); } catch (e) { /* ignore */ } });
+  peer.on('error', function (e) { if (e && e.type === 'peer-unavailable') return; toast(peerErrorText(e), 'bad'); });
+  Net.transport = { kind: 'peer', publish: function () { conns.forEach(function (cid, c) { sendState(c); }); }, close: function () { try { peer.destroy(); } catch (e) { /* ignore */ } } };
+  Net.code = code;
+  Net.mode = 'host';
+  Net.kind = 'online';
+  resetUI();
+  if (resume) setState(clone(resume.s));
+  else setState(lobbyState(name, settings));
+  Net.transport.publish();
+}
+async function peerJoin(code, name) {
+  await loadPeerLib();
+  const peer = await openPeer(null);
+  let conn = null;
+  let ever = false;
+  let closed = false;
+  let retryT = 0;
+  Net.mode = 'guest';
+  Net.kind = 'online';
+  Net.code = code;
+  function setConn(v) { UI.conn = v; renderTop(); }
+  function connect() {
+    if (closed) return;
+    conn = peer.connect(PEER_PREFIX + code, { reliable: true });
+    conn.on('open', function () { ever = true; setConn(true); conn.send({ type: 'hello', clientId: Net.me, name: name }); });
+    conn.on('data', function (m) {
+      if (!m || m.type !== 'state' || !m.s) return;
+      const sk = Date.now() - (m.t || Date.now());
+      if (Math.abs(sk) > 2500) UI.skew = sk;
+      else UI.skew = 0;
+      setState(m.s);
+    });
+    conn.on('close', function () { if (closed) return; setConn(false); clearTimeout(retryT); retryT = setTimeout(connect, 3000); });
+  }
+  return new Promise(function (res, rej) {
+    peer.on('error', function (e) {
+      if (closed) return;
+      if (!ever) { closed = true; try { peer.destroy(); } catch (x) { /* ignore */ } rej(e); return; }
+      setConn(false);
+      clearTimeout(retryT);
+      retryT = setTimeout(connect, 3000);
+    });
+    peer.on('disconnected', function () { if (!closed) { try { peer.reconnect(); } catch (x) { /* ignore */ } } });
+    Net.transport = {
+      kind: 'peer',
+      send: function (m) { if (conn && conn.open) conn.send(Object.assign({ clientId: Net.me }, m)); else toast('Not connected to the host right now.', 'bad'); },
+      close: function () { closed = true; clearTimeout(retryT); try { peer.destroy(); } catch (x) { /* ignore */ } }
+    };
+    connect();
+    const watch = setInterval(function () { if (ever) { clearInterval(watch); res(); } }, 100);
+    setTimeout(function () {
+      if (!ever && !closed) {
+        clearInterval(watch);
+        closed = true;
+        try { peer.destroy(); } catch (x) { /* ignore */ }
+        rej(new Error('Could not reach room ' + code + '. Check the code, and make sure the host has the page open.'));
+      }
+    }, 15000);
+  });
+}
+
+function dbErrorText(e) {
+  const c = e && e.code;
+  if (c === 'invalid_argument') return 'Your friend needs edit access to this page to play online.';
+  if (c === 'quota_exceeded') return 'Storage for this page is full.';
+  if (c === 'resource_exhausted') return 'Too many moves at once. Wait a moment.';
+  if (c === 'revoked') return 'Online access to this page was withdrawn.';
+  return 'Could not reach the game server. Try again.';
+}
+function makeWriter(ref) {
+  let busy = false;
+  let next = null;
+  let tries = 0;
+  async function pump() {
+    if (busy || !next) return;
+    busy = true;
+    const body = next;
+    next = null;
+    try { await ref.set(body); tries = 0; }
+    catch (e) {
+      if (e && e.code === 'unavailable' && tries < 3) { tries++; await sleep(500 + rnd(700)); if (!next) next = body; }
+      else { tries = 0; toast(dbErrorText(e), 'bad'); }
+    }
+    busy = false;
+    pump();
+  }
+  return { push: function (body) { next = body; pump(); } };
+}
+async function initCloud() {
+  try {
+    const both = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    ONLINE.db = both[0];
+    ONLINE.user = both[1];
+    let id = null;
+    if (ONLINE.user) id = await ONLINE.user.id();
+    if (ONLINE.db && id) { ONLINE.env = 'cloud'; Net.me = id; loadResumable(); }
+    else ONLINE.env = 'cloud-off';
+  } catch (e) { ONLINE.env = 'cloud-off'; }
+  refreshOnlineCard();
+}
+async function loadResumable() {
+  try {
+    const q = await ONLINE.db.collection('games').where('hostId', '==', Net.me).get();
+    ONLINE.resume = q.docs.map(function (d) { return { code: d.id, data: d.data() }; }).filter(function (x) {
+      return x.data && x.data.s && x.data.status !== 'over' && Date.now() - (x.data.updated || 0) < 3 * 86400000;
+    }).sort(function (a, b) { return (b.data.updated || 0) - (a.data.updated || 0); }).slice(0, 3);
+  } catch (e) { ONLINE.resume = []; }
+  refreshOnlineCard();
+}
+function processInbox(data) {
+  if (!data || !S) return;
+  const cid = String(data.client || '');
+  if (!cid || !Array.isArray(data.msgs)) return;
+  const msgs = data.msgs.filter(function (m) { return m && typeof m.n === 'number'; }).sort(function (a, b) { return a.n - b.n; });
+  let changed = false;
+  msgs.forEach(function (m) {
+    let ack = 0;
+    if (S.acks && S.acks[cid]) ack = S.acks[cid];
+    if (m.n <= ack) return;
+    S.acks = Object.assign({}, S.acks);
+    S.acks[cid] = m.n;
+    changed = true;
+    hostReceive(cid, clone(m));
+  });
+  if (changed && Net.transport) Net.transport.publish();
+}
+async function cloudHost(name, settings, resume) {
+  const db = ONLINE.db;
+  let code = '';
+  if (resume) code = resume.code;
+  else {
+    for (let i = 0; i < 5; i++) {
+      code = genCode();
+      const s = await db.doc('games/' + code).get();
+      if (!s.exists) break;
+    }
+  }
+  const ref = db.doc('games/' + code);
+  const w = makeWriter(ref);
+  let unsub = null;
+  Net.transport = { kind: 'cloud', publish: function () { if (S) w.push({ hostId: Net.me, status: S.status, updated: Date.now(), s: S }); }, close: function () { if (unsub) unsub(); } };
+  Net.code = code;
+  Net.mode = 'host';
+  Net.kind = 'online';
+  resetUI();
+  if (resume) setState(clone(resume.s));
+  else setState(lobbyState(name, settings));
+  Net.transport.publish();
+  unsub = db.collection('games/' + code + '/inbox').onSnapshot(function (snap) {
+    snap.docs.forEach(function (d) { processInbox(d.data()); });
+  }, function (e) { toast(dbErrorText(e), 'bad'); });
+}
+async function cloudJoin(code, name) {
+  const db = ONLINE.db;
+  const ref = db.doc('games/' + code);
+  const snap = await ref.get();
+  if (!snap.exists || !snap.data() || !snap.data().s) throw new Error('There is no room called ' + code + '. Check the code with your host.');
+  const inRef = db.doc('games/' + code + '/inbox/' + Net.me);
+  const mine = await inRef.get();
+  let msgs = [];
+  if (mine.exists && mine.data() && Array.isArray(mine.data().msgs)) msgs = clone(mine.data().msgs);
+  let seq = 0;
+  msgs.forEach(function (m) { if (m.n > seq) seq = m.n; });
+  const first = clone(snap.data());
+  const acks = first.s.acks || {};
+  if ((acks[Net.me] || 0) > seq) seq = acks[Net.me];
+  const w = makeWriter(inRef);
+  let unsub = null;
+  Net.mode = 'guest';
+  Net.kind = 'online';
+  Net.code = code;
+  Net.transport = {
+    kind: 'cloud',
+    send: function (m) { seq++; msgs.push(Object.assign({}, m, { n: seq })); msgs = msgs.slice(-12); w.push({ client: Net.me, msgs: msgs }); },
+    close: function () { if (unsub) unsub(); }
+  };
+  resetUI();
+  setState(first.s);
+  unsub = ref.onSnapshot(function (s) { if (!s.exists) return; const d = s.data(); if (d && d.s) setState(clone(d.s)); }, function (e) { toast(dbErrorText(e), 'bad'); });
+  Net.transport.send({ type: 'hello', name: name });
+  saveLocal('im-last-room', code);
+}
+
+/* ---------- Starting games ---------- */
+
+function myName() {
+  const el = document.getElementById('my-name');
+  let v = '';
+  if (el) v = el.value;
+  const n = cleanName(v, 'Player');
+  savePrefs({ name: n });
+  return n;
+}
+function startPractice() {
+  ensureWords();
+  const name = myName();
+  const n = Number(document.getElementById('pr-bots').value);
+  const level = document.getElementById('pr-level').value;
+  const timer = Number(document.getElementById('pr-timer').value);
+  const coach = document.getElementById('pr-coach').checked;
+  savePrefs({ bots: n, level: level, timer: timer, coach: coach });
+  const players = [{ name: name, kind: 'human', level: '', client: 'me' }];
+  for (let i = 0; i < n; i++) players.push({ name: BOT_NAMES[i], kind: 'bot', level: level, client: '' });
+  leaveSession();
+  Net.mode = 'local';
+  Net.kind = 'practice';
+  resetUI();
+  setState(newGame(players, { timer: timer, dict: true, coach: coach, handoff: false }, Date.now(), null));
+}
+function readHsNames() {
+  const out = [];
+  document.querySelectorAll('[data-hs]').forEach(function (el) { out.push(el.value); });
+  if (out.length) UI.hsNames = out;
+}
+function startHotseat() {
+  ensureWords();
+  readHsNames();
+  const timer = Number(document.getElementById('hs-timer').value);
+  savePrefs({ hsNames: UI.hsNames, hsTimer: timer });
+  const players = UI.hsNames.map(function (n, i) { return { name: cleanName(n, 'Player ' + (i + 1)), kind: 'human', level: '', client: 'p' + i }; });
+  leaveSession();
+  Net.mode = 'local';
+  Net.kind = 'hotseat';
+  resetUI();
+  setState(newGame(players, { timer: timer, dict: true, coach: false, handoff: true }, Date.now(), null));
+}
+function onlineSettings() { return { timer: 45, dict: true, coach: false, handoff: false }; }
+function failOnline(e) {
+  leaveSession();
+  UI.screen = 'home';
+  UI.built = '';
+  render();
+  let msg = 'Something went wrong.';
+  if (e && e.type) msg = peerErrorText(e);
+  else if (e && e.message) msg = e.message;
+  toast(msg, 'bad');
+}
+async function onlineCreate() {
+  const name = myName();
+  ensureWords();
+  if (Net.mode !== 'local' || ONLINE.env === 'peer') { if (!Net.me) Net.me = localId(); }
+  UI.joining = 'Opening a room…';
+  UI.screen = 'joining';
+  render();
+  try {
+    if (ONLINE.env === 'cloud') await cloudHost(name, onlineSettings(), null);
+    else await peerHost(name, onlineSettings(), null);
+  } catch (e) { failOnline(e); }
+}
+async function onlineJoin() {
+  const name = myName();
+  const el = document.getElementById('on-code');
+  const code = String((el && el.value) || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (code.length !== 5) { toast('Room codes have 5 characters.', 'bad'); return; }
+  ensureWords();
+  if (ONLINE.env === 'peer') Net.me = localId();
+  saveLocal('im-last-room', code);
+  UI.joining = 'Joining room ' + code + '…';
+  UI.screen = 'joining';
+  render();
+  try {
+    if (ONLINE.env === 'cloud') await cloudJoin(code, name);
+    else await peerJoin(code, name);
+  } catch (e) { failOnline(e); }
+}
+async function onlineResume(code) {
+  const name = myName();
+  ensureWords();
+  UI.joining = 'Reopening room ' + code + '…';
+  UI.screen = 'joining';
+  render();
+  try {
+    if (ONLINE.env === 'cloud') {
+      const r = ONLINE.resume.find(function (x) { return x.code === code; });
+      if (!r) throw new Error('That room is no longer available.');
+      await cloudHost(name, onlineSettings(), { code: code, s: r.data.s });
+    } else {
+      Net.me = localId();
+      const saved = JSON.parse(loadLocal('im-host') || 'null');
+      if (!saved || saved.code !== code) throw new Error('That room is no longer saved here.');
+      await peerHost(name, onlineSettings(), saved);
+    }
+  } catch (e) { failOnline(e); }
+}
+function leaveSession() {
+  if (Net.transport && Net.transport.close) Net.transport.close();
+  Net.transport = null;
+  Net.mode = 'local';
+  Net.kind = '';
+  Net.code = '';
+  S = null;
+  clearTimeout(botTimer);
+  botKey = '';
+}
+function leaveGame() {
+  leaveSession();
+  UI.screen = 'home';
+  UI.built = '';
+  UI.confirmLeave = false;
+  render();
+  if (ONLINE.env === 'cloud') loadResumable();
+}
+
+/* ---------- Coach ---------- */
+
+function updateCoach() {
+  if (Net.kind !== 'practice' || !S || S.status !== 'playing' || !S.settings.coach) return;
+  const t = S.turn;
+  if (!t || t.seat !== 0 || t.waiting || (t.phase !== 'cast' && t.phase !== 'counter')) return;
+  const key = t.id + ':' + S.seq;
+  if (UI.coachKey === key) return;
+  UI.coachKey = key;
+  let need = 0;
+  if (t.phase === 'counter') need = S.malice;
+  const items = availableFor(S, 0);
+  const res = searchWords(items, 1 + S.fx.blots, need, S.fx.bonus, false, 15);
+  let best = null;
+  res.forEach(function (r) { if (!best || r.score > best.score || (r.score === best.score && WORDS[r.w].length < WORDS[best.w].length)) best = r; });
+  UI.coach = { turnId: t.id, phase: t.phase, need: need, count: res.length, best: null };
+  if (best) UI.coach.best = { word: WORDS[best.w].toUpperCase(), score: best.score };
+  if (UI.hintShown) render();
+}
+function makeCoachMsg(old) {
+  const c = UI.coach;
+  if (!old.settings.coach || !c || c.turnId !== old.turn.id) return;
+  const ev = S.ev;
+  let msg = '';
+  let bestTxt = '';
+  if (c.best) bestTxt = '<b class="w">' + c.best.word + '</b> for ' + c.best.score;
+  if (ev && ev.seat === 0 && (ev.k === 'cast' || ev.k === 'counter')) {
+    msg = 'You played <b class="w">' + esc(ev.word) + '</b> for ' + ev.score + '. ';
+    if (c.best && c.best.score > ev.score) msg += 'The strongest word you had was ' + bestTxt + '.';
+    else msg += 'That was the strongest word available. Well cast.';
+  } else if (c.best) {
+    if (c.phase === 'counter') msg = 'You could have beaten ' + c.need + ' with ' + bestTxt + '. There were ' + c.count + ' winning words.';
+    else msg = 'You could have opened with ' + bestTxt + '.';
+  } else {
+    if (c.phase === 'counter') msg = 'No word could beat ' + c.need + ' with those glyphs, so yielding was right.';
+    else msg = 'No word could be made from those glyphs.';
+  }
+  UI.coachMsg = msg;
+  UI.coachMsgTurn = old.turn.id;
+}
+
+/* ---------- Rendering ---------- */
+
+const $ = function (s) { return document.querySelector(s); };
+let toastTimer = 0;
+function toast(msg, kind) {
+  const el = $('#toast');
+  el.textContent = msg;
+  let cls = 'show';
+  if (kind) cls += ' ' + kind;
+  el.className = cls;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { el.className = ''; }, 3200);
+}
+function opt(value, label, sel) {
+  let s = '';
+  if (String(value) === String(sel)) s = ' selected';
+  return '<option value="' + esc(value) + '"' + s + '>' + esc(label) + '</option>';
+}
+function timerOptions(sel) { return TIMERS.map(function (x) { return opt(x[0], x[1], sel); }).join(''); }
+function glyph(tile, o) {
+  o = o || {};
+  let cls = 'glyph';
+  if (tile.g) cls += ' gilt';
+  if (o.cls) cls += ' ' + o.cls;
+  let tag = 'span';
+  let attrs = '';
+  if (o.src) { tag = 'button'; attrs += ' type="button" data-src="' + o.src + '" data-id="' + o.id + '"'; }
+  if (o.ci !== undefined) { tag = 'button'; attrs += ' type="button" data-ci="' + o.ci + '" title="Remove from word"'; }
+  if (o.delay) attrs += ' style="animation-delay:' + o.delay + 'ms"';
+  return '<' + tag + ' class="' + cls + '"' + attrs + ' aria-label="' + tile.l + ', ' + tile.v + ' points"><span class="l">' + tile.l + '</span><span class="v">' + tile.v + '</span></' + tag + '>';
+}
+function blotGlyph(letter, o) {
+  o = o || {};
+  let cls = 'glyph blot';
+  if (o.cls) cls += ' ' + o.cls;
+  let tag = 'span';
+  let attrs = '';
+  if (o.src) { tag = 'button'; attrs += ' type="button" data-src="blot" data-id="-1"'; }
+  if (o.ci !== undefined) { tag = 'button'; attrs += ' type="button" data-ci="' + o.ci + '" title="Remove from word"'; }
+  if (o.delay) attrs += ' style="animation-delay:' + o.delay + 'ms"';
+  let shown = '?';
+  if (letter) shown = letter;
+  return '<' + tag + ' class="' + cls + '"' + attrs + ' aria-label="Inkblot ' + shown + ', 0 points"><span class="l">' + shown + '</span><span class="v">0</span></' + tag + '>';
+}
+function sealsHTML(p) {
+  let h = '<span class="seals">';
+  for (let i = 0; i < 3; i++) {
+    let c = 'seal';
+    let state = 'intact';
+    if (i < p.seals) { c += ' broken'; state = 'broken'; }
+    h += '<span class="' + c + '" title="' + SEAL_NAMES[i] + ' (' + state + ')">' + ROMAN[i] + '</span>';
+  }
+  return h + '</span>';
+}
+function render() {
+  renderTop();
+  const scr = $('#screen');
+  let keep = 0;
+  const ch = $('.chron');
+  if (ch) keep = ch.scrollTop;
+  if (UI.screen === 'home') {
+    if (UI.built !== 'home') { renderHome(); UI.built = 'home'; }
+  } else if (UI.screen === 'joining') {
+    scr.innerHTML = '<section class="panel" style="max-width:520px"><h2>One Moment</h2><p>' + esc(UI.joining) + '</p></section>';
+    UI.built = 'joining';
+  } else if (UI.screen === 'lobby') {
+    renderLobby();
+    UI.built = 'lobby';
+  } else if (UI.screen === 'game' && S) {
+    renderGame();
+    UI.built = 'game';
+  }
+  const ch2 = $('.chron');
+  if (ch2 && keep) ch2.scrollTop = keep;
+  renderCover();
+}
+function renderTop() {
+  let h = '';
+  if (UI.screen === 'lobby' || UI.screen === 'game') {
+    if (Net.code) h += '<span class="chip">Room ' + esc(Net.code) + '</span>';
+    else if (Net.kind === 'practice') h += '<span class="chip">Practice</span>';
+    else if (Net.kind === 'hotseat') h += '<span class="chip">Pass And Play</span>';
+    if (Net.mode === 'guest' && !UI.conn) h += '<span class="chip warn">Reconnecting</span>';
+  }
+  h += '<button class="btn ghost small" type="button" data-act="rules">Rules</button>';
+  if (UI.screen !== 'home') {
+    let lbl = 'Leave';
+    if (UI.confirmLeave) lbl = 'Tap again to leave';
+    h += '<button class="btn ghost small" type="button" data-act="leave-ask">' + lbl + '</button>';
+  }
+  $('#topRight').innerHTML = h;
+}
+
+function demoRow(word) {
+  return word.split('').map(function (ch) { return glyph({ l: ch, v: DIST[ch][1] }); }).join('');
+}
+function renderHome() {
+  const pr = loadPrefs();
+  let name = pr.name || '';
+  let bots = pr.bots || 2;
+  let level = pr.level || 'normal';
+  let timer = 45;
+  if (pr.timer !== undefined) timer = pr.timer;
+  let coach = ' checked';
+  if (pr.coach === false) coach = '';
+  if (!UI.hsNames.length) {
+    if (Array.isArray(pr.hsNames) && pr.hsNames.length >= 2) UI.hsNames = pr.hsNames.slice(0, 5);
+    else UI.hsNames = ['Player 1', 'Player 2'];
+  }
+  let hsTimer = 45;
+  if (pr.hsTimer !== undefined) hsTimer = pr.hsTimer;
+  let botOpts = '';
+  for (let i = 1; i <= 4; i++) { let lbl = i + ' rivals'; if (i === 1) lbl = '1 rival'; botOpts += opt(i, lbl, bots); }
+  let levelOpts = '';
+  Object.keys(LEVELS).forEach(function (k) { levelOpts += opt(k, LEVELS[k].label, level); });
+  let values = '';
+  Object.keys(DIST).sort(function (a, b) { return (DIST[a][1] - DIST[b][1]) || a.localeCompare(b); }).forEach(function (l) {
+    values += '<div class="vcell">' + glyph({ l: l, v: DIST[l][1] }) + '<span>×' + DIST[l][0] + '</span></div>';
+  });
+  $('#screen').innerHTML =
+    '<section class="hero">' +
+      '<div><h1>Ink <span>&amp;</span><br>Malice</h1>' +
+      '<p class="lede">A duel of words for 2 to 5 rivals. Spell a word, fling it at a rival, and make them beat your score before the sand runs out.</p>' +
+      '<p class="lede">Practise against bots with a coach, share one screen, or open a room and play a friend online.</p></div>' +
+      '<div class="demo" aria-label="Example exchange">' +
+        '<span class="eyebrow">An exchange</span>' +
+        '<div class="demo-row">' + demoRow('CHARM') + '</div>' +
+        '<p class="demo-cap">Wren casts <b>CHARM</b> for 11 at you.</p>' +
+        '<div class="demo-row">' + demoRow('MARCHES') + '</div>' +
+        '<p class="demo-cap">You borrow all five of Wren’s glyphs, add <b>E</b> and <b>S</b> from your hand, and throw back <b>MARCHES</b> for 13. Now Wren must beat 13.</p>' +
+      '</div>' +
+    '</section>' +
+    '<div class="namebar"><div class="field"><label for="my-name">Your Name</label><input type="text" id="my-name" maxlength="18" autocomplete="nickname" placeholder="Player" value="' + esc(name) + '"></div></div>' +
+    '<section class="modes">' +
+      '<article class="mode"><h2>Practice</h2><p>Duel bots at your own pace. After each turn a coach shows the strongest word you had.</p>' +
+        '<div class="row"><div class="field"><label for="pr-bots">Rivals</label><select id="pr-bots">' + botOpts + '</select></div>' +
+        '<div class="field"><label for="pr-level">Bot Skill</label><select id="pr-level">' + levelOpts + '</select></div></div>' +
+        '<div class="field"><label for="pr-timer">Timer</label><select id="pr-timer">' + timerOptions(timer) + '</select></div>' +
+        '<label class="check"><input type="checkbox" id="pr-coach"' + coach + '> Coach tips and a Hint button</label>' +
+        '<button class="btn" type="button" data-act="practice-start">Start Practice</button></article>' +
+      '<article class="mode"><h2>Pass And Play</h2><p>Share one screen. Each player’s glyphs stay hidden until they tap in.</p>' +
+        '<div class="hs-list" id="hs-list"></div>' +
+        '<div class="field"><label for="hs-timer">Timer</label><select id="hs-timer">' + timerOptions(hsTimer) + '</select></div>' +
+        '<button class="btn" type="button" data-act="hotseat-start">Start Duel</button></article>' +
+      '<article class="mode" id="online-card"></article>' +
+    '</section>' +
+    '<section class="primer"><div><h2>How A Duel Works</h2><ol class="steps">' +
+      '<li><p><b>Open.</b> The caster spells any word of 3 or more letters from their 5 glyphs. Its points set the Malice.</p></li>' +
+      '<li><p><b>Aim.</b> They discard any glyphs they do not want, draw back to 5, and cast the word at a rival.</p></li>' +
+      '<li><p><b>Counter.</b> The rival has until the sand runs out to spell a word worth more. They may use their own glyphs and every glyph in the word cast at them.</p></li>' +
+      '<li><p><b>Throw it back.</b> A successful counter becomes the new cast, aimed at anyone, even straight back.</p></li>' +
+      '<li><p><b>Break.</b> Fail, and one of your three wax seals breaks. Lose all three and you are out. Last duellist standing wins.</p></li>' +
+    '</ol></div><div><h2>Glyph Values</h2><p class="note">100 glyphs. The number under each shows how many are in the deck. The shared Inkblot can be any letter but scores 0.</p><div class="values">' + values + '</div></div></section>';
+  renderHsNames();
+  refreshOnlineCard();
+  const m = /^#join-([A-Za-z0-9]{5})$/.exec(location.hash || '');
+  if (m) { const c = document.getElementById('on-code'); if (c) c.value = m[1].toUpperCase(); }
+}
+function renderHsNames() {
+  const box = document.getElementById('hs-list');
+  if (!box) return;
+  let h = '<span class="label">Players</span>';
+  UI.hsNames.forEach(function (n, i) {
+    h += '<div class="hs-item"><input type="text" data-hs="' + i + '" id="hs-' + i + '" maxlength="18" aria-label="Player ' + (i + 1) + ' name" value="' + esc(n) + '">';
+    if (UI.hsNames.length > 2) h += '<button class="btn ghost small" type="button" data-act="hs-remove" data-i="' + i + '" aria-label="Remove player ' + (i + 1) + '">Remove</button>';
+    h += '</div>';
+  });
+  if (UI.hsNames.length < 5) h += '<button class="btn ghost small" type="button" data-act="hs-add" style="justify-self:start">Add Player</button>';
+  box.innerHTML = h;
+}
+function refreshOnlineCard() {
+  const card = document.getElementById('online-card');
+  if (!card) return;
+  const env = ONLINE.env;
+  let h = '<h2>Play Online</h2>';
+  if (env === 'cloud-pending') {
+    card.innerHTML = h + '<p>Checking whether online rooms are available on this page…</p>';
+    return;
+  }
+  if (env === 'cloud-off') {
+    card.innerHTML = h + '<p>Online rooms need you to be signed in to Claude, with edit access to this page.</p><p class="note">Practice and Pass And Play work without it. You can also download this page as a file and open it anywhere for online play.</p>';
+    return;
+  }
+  if (env === 'cloud') h += '<p>Share this page with your friend as an Editor. One of you creates a room, the other joins with its code.</p>';
+  else h += '<p>Both of you open this page. One creates a room and shares the 5-letter code, the other joins with it.</p>';
+  h += '<button class="btn" type="button" data-act="online-create">Create Room</button>';
+  const last = loadLocal('im-last-room') || '';
+  h += '<div class="row"><div class="field"><label for="on-code">Room Code</label><input type="text" id="on-code" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCDE" value="' + esc(last) + '"></div><button class="btn ghost" type="button" data-act="online-join">Join</button></div>';
+  let resume = [];
+  if (env === 'cloud') resume = ONLINE.resume.map(function (r) { return r.code; });
+  else {
+    try {
+      const saved = JSON.parse(loadLocal('im-host') || 'null');
+      if (saved && saved.s && saved.s.status !== 'over' && Date.now() - saved.at < 86400000) resume = [saved.code];
+    } catch (e) { resume = []; }
+  }
+  if (resume.length) {
+    h += '<div class="field"><span class="label">Rooms You Host</span><div class="resume">';
+    resume.forEach(function (c) { h += '<button class="btn ghost small" type="button" data-act="resume" data-code="' + esc(c) + '">Reopen ' + esc(c) + '</button>'; });
+    h += '</div></div>';
+  }
+  if (env === 'peer') h += '<p class="note">Connects your browsers directly through the free PeerJS service. The host keeps the page open while you play.</p>';
+  card.innerHTML = h;
+}
+
+function renderLobby() {
+  const host = Net.mode === 'host';
+  let seats = '';
+  S.players.forEach(function (p, i) {
+    let tags = '';
+    if (i === 0) tags += '<span class="tag">Host</span> ';
+    if (p.client && p.client === Net.me) tags += '<span class="tag">You</span> ';
+    if (p.kind === 'bot') tags += '<span class="tag">Bot · ' + LEVELS[p.level].label + '</span> ';
+    let rm = '';
+    if (host && i > 0) rm = '<button class="btn ghost small" type="button" data-act="remove-player" data-i="' + i + '">Remove</button>';
+    seats += '<li><span class="r-name">' + esc(p.name) + '</span><span>' + tags + rm + '</span></li>';
+  });
+  let invite;
+  if (Net.transport && Net.transport.kind === 'peer') {
+    if (/^https?:$/.test(location.protocol)) invite = 'Send your friend the invite link, or have them open this page and enter the code.';
+    else invite = 'Your friend opens the same file on their computer, chooses Play Online, and enters this code.';
+  } else invite = 'Your friend opens this page in Claude, chooses Play Online, and enters this code.';
+  let right = '<div class="panel"><h2>Duellists (' + S.players.length + ' of 5)</h2><ol class="seats">' + seats + '</ol>';
+  if (host) {
+    let lv = '';
+    Object.keys(LEVELS).forEach(function (k) { lv += opt(k, LEVELS[k].label, UI.botLevel); });
+    let disAdd = '';
+    if (S.players.length >= 5) disAdd = ' disabled';
+    let dict = '';
+    if (S.settings.dict) dict = ' checked';
+    let disStart = '';
+    if (S.players.length < 2) disStart = ' disabled';
+    right += '<div class="row"><div class="field"><label for="lb-level">Bot Skill</label><select id="lb-level">' + lv + '</select></div><button class="btn ghost" type="button" data-act="add-bot"' + disAdd + '>Add Bot</button></div>' +
+      '<div class="field"><label for="lb-timer">Timer</label><select id="lb-timer">' + timerOptions(S.settings.timer) + '</select></div>' +
+      '<label class="check"><input type="checkbox" id="lb-dict"' + dict + '> Check words against the dictionary</label>' +
+      '<button class="btn" type="button" data-act="start"' + disStart + '>Start The Duel</button>';
+    if (S.players.length < 2) right += '<p class="note">Waiting for at least one more duellist. You can add a bot.</p>';
+  } else {
+    right += '<p class="muted">Waiting for the host to start the duel.</p>';
+  }
+  right += '</div>';
+  $('#screen').innerHTML = '<section class="lobby"><div class="panel gold"><span class="eyebrow">Room Code</span><div class="code">' + esc(Net.code) + '</div><p>' + invite + '</p><button class="btn ghost" type="button" data-act="copy-code">Copy Invite</button></div>' + right + '</section>';
+}
+
+function statusText(st, i) {
+  const p = st.players[i];
+  const t = st.turn;
+  if (p.out) return 'Out of the duel';
+  if (st.status === 'over') { if (st.winner === i) return 'Winner'; return ''; }
+  if (!t || t.seat !== i) { if (st.caster === i && st.word) return 'Cast ' + st.word; return 'Watching'; }
+  if (t.waiting) return 'Getting ready';
+  if (t.phase === 'cast') return 'Spelling an opening word';
+  if (t.phase === 'counter') return 'Countering';
+  if (t.phase === 'tidy') return 'Choosing a target';
+  if (t.phase === 'curse') return 'Placing a Parting Curse';
+  return '';
+}
+function rivalHTML(st, p, i, fresh) {
+  const t = st.turn;
+  let cls = 'rival';
+  if (p.out) cls += ' out';
+  if (t && t.seat === i && st.status === 'playing') cls += ' active';
+  if (fresh && st.ev.k === 'seal' && st.ev.seat === i) cls += ' hit';
+  let tag = '';
+  if (p.kind === 'bot') tag = '<span class="tag">' + LEVELS[p.level].label + '</span>';
+  let extras = '';
+  if (p.seals >= 1 && !p.giltUsed && !p.out) extras += glyph(st.tiles[p.gilt], { cls: 'mini' });
+  if (p.seals >= 2 && !p.out) {
+    let c = 'charm-chip';
+    if (p.charmUsed) c += ' spent';
+    extras += '<span class="' + c + '" title="' + esc(CHARMS[p.charm].text) + '">' + CHARMS[p.charm].name + '</span>';
+  }
+  let backs = '';
+  for (let k = 0; k < Math.min(p.hand.length, 8); k++) backs += '<span class="back"></span>';
+  let h = '<article class="' + cls + '"><header><span class="r-name">' + esc(p.name) + '</span>' + tag + '</header>';
+  h += '<div class="r-row">' + sealsHTML(p) + '<span class="backs" aria-label="' + p.hand.length + ' glyphs in hand">' + backs + '</span></div>';
+  if (extras) h += '<div class="r-row">' + extras + '</div>';
+  h += '<p class="r-status">' + esc(statusText(st, i)) + '</p></article>';
+  return h;
+}
+function nameB(st, i) { return '<b>' + esc(st.players[i].name) + '</b>'; }
+function whoB(st, i, me) {
+  if (i === me) return 'You';
+  if (i < 0) return 'The table';
+  return nameB(st, i);
+}
+function bannerText(st, me) {
+  const t = st.turn;
+  if (st.status === 'over') {
+    if (st.winner === me && Net.kind !== 'hotseat') return 'You are the last duellist standing.';
+    return nameB(st, st.winner) + ' is the last duellist standing.';
+  }
+  if (t.waiting) return 'Waiting for ' + nameB(st, t.seat) + ' to take the quill.';
+  const mine = t.seat === me;
+  let what = '<b class="w">' + esc(st.word) + '</b> (' + st.malice + ')';
+  if (t.phase === 'cast') {
+    if (mine) return 'Your opening cast. Spell any word of 3 or more letters.';
+    return nameB(st, t.seat) + ' is spelling an opening word.';
+  }
+  if (t.phase === 'counter') {
+    let from = whoB(st, t.from, me);
+    if (t.from >= 0 && st.players[t.from].out) from = nameB(st, t.from) + '’s Parting Curse';
+    if (mine) {
+      if (st.malice > 0) return from + ' cast ' + what + ' at you. Score more than ' + st.malice + ' to throw it back.';
+      return from + ' could not open. Spell any word to take the initiative.';
+    }
+    if (st.malice > 0) return from + ' cast ' + what + ' at ' + nameB(st, t.seat) + '.';
+    return nameB(st, t.seat) + ' must spell any word.';
+  }
+  if (t.phase === 'tidy') {
+    if (mine) {
+      if (st.malice > 0) return 'Your word ' + what + ' is ready. Discard any glyphs you do not want, then choose a target.';
+      return 'No word this time. Discard any glyphs you do not want, then choose a rival to open against.';
+    }
+    return nameB(st, t.seat) + ' is choosing a target.';
+  }
+  if (t.phase === 'curse') {
+    if (mine) return 'Your Final Seal has broken. Choose who must face ' + what + ' before you leave the duel.';
+    return nameB(st, t.seat) + ' is choosing who inherits their Parting Curse.';
+  }
+  return '';
+}
+function blotsLeft() {
+  if (!S || !S.fx) return 0;
+  return 1 + S.fx.blots - UI.compose.filter(function (x) { return x.b; }).length;
+}
+function pickerHTML() {
+  let h = '<div class="picker" role="dialog" aria-label="Choose a letter for the Inkblot">';
+  for (let i = 0; i < 26; i++) { const L = String.fromCharCode(65 + i); h += '<button type="button" data-pick="' + L + '">' + L + '</button>'; }
+  return h + '</div>';
+}
+function tableHTML(st, me, composing, fresh) {
+  const t = st.turn;
+  let cls = 'table';
+  if (fresh && st.ev.k === 'seal') cls += ' shake';
+  const pct = Math.min(100, st.malice * 2.5);
+  let dialLabel = 'Malice';
+  if (t && t.phase === 'counter' && st.malice > 0) dialLabel = 'To beat';
+  const dial = '<div class="dial" style="--p:' + pct + '"><div class="dial-in"><span class="eyebrow">' + dialLabel + '</span><strong>' + st.malice + '</strong></div></div>';
+  let pool = '';
+  if (st.pool.length) {
+    const canUse = composing && t.phase === 'counter';
+    const anim = fresh && (st.ev.k === 'cast' || st.ev.k === 'counter');
+    let cards = '';
+    st.pool.forEach(function (x, k) {
+      let delay = 0;
+      let c = '';
+      if (anim) { c = 'enter'; delay = k * 55; }
+      if (typeof x.t === 'number') {
+        let src = '';
+        if (canUse) { src = 'pool'; if (UI.compose.some(function (y) { return y.t === x.t; })) c += ' used'; }
+        cards += glyph(st.tiles[x.t], { src: src, id: x.t, cls: c, delay: delay });
+      } else {
+        cards += blotGlyph(x.l, { cls: c + ' spent', delay: delay });
+      }
+    });
+    let by = '';
+    if (st.caster >= 0) by = 'Cast by ' + esc(st.players[st.caster].name);
+    if (canUse) by += '. Tap these glyphs to borrow them.';
+    pool = '<div class="pool">' + cards + '</div><p class="pool-cap">' + by + '</p>';
+  } else {
+    pool = '<div class="pool empty"><span>No word on the table</span></div>';
+  }
+  const sand = '<div class="sand-row"><div class="sand" id="sand"><i></i></div><span id="sandText" class="sand-text"></span></div>';
+  let n = 1;
+  if (composing) n = 1 + st.fx.blots;
+  const usedB = UI.compose.filter(function (x) { return x.b; }).length;
+  let wc = '';
+  for (let i = 0; i < n; i++) {
+    let c = '';
+    let src = '';
+    if (composing) { src = 'blot'; if (i < usedB) c = 'used'; }
+    wc += blotGlyph('', { src: src, cls: c });
+  }
+  let picker = '';
+  if (UI.picker && composing) picker = pickerHTML();
+  const well = '<div class="well"><span class="eyebrow">Inkblot</span><div class="well-cards">' + wc + '</div><p class="well-cap">Any letter, worth 0. Shared by all.</p>' + picker + '</div>';
+  let over = '';
+  if (st.status === 'over') {
+    let title = esc(st.players[st.winner].name) + ' Wins';
+    if (st.winner === me && Net.kind !== 'hotseat') title = 'You Win';
+    let btn = '<button class="btn" type="button" data-act="again">Play Again</button>';
+    if (Net.mode === 'guest') btn = '<p class="muted">The host can start another duel.</p>';
+    over = '<div class="over"><span class="eyebrow">The duel is over</span><h2>' + title + '</h2><div class="actions">' + btn + '<button class="btn ghost" type="button" data-act="leave">Back To Menu</button></div></div>';
+  }
+  return '<section class="' + cls + '">' + dial + '<div class="center"><p class="banner" aria-live="polite">' + bannerText(st, me) + '</p>' + pool + sand + '</div>' + well + over + '</section>';
+}
+function specFromCompose() { return UI.compose.map(function (x) { if (x.b) return { b: 1, l: x.l }; return { t: x.t }; }); }
+function previewHTML(st, me) {
+  const spec = specFromCompose();
+  if (!spec.length) {
+    let need = '';
+    if (st.turn.phase === 'counter' && st.malice > 0) need = 'You need more than ' + st.malice + '.';
+    return '<p class="preview">' + need + '</p>';
+  }
+  const r = evalSpec(st, me, spec);
+  if (r.error) return '<p class="preview bad">' + esc(r.error) + '</p>';
+  let state = 'Ready to cast';
+  let cls = 'good';
+  if (spec.length < 3) { state = 'At least 3 letters'; cls = 'warn'; }
+  else if (st.settings.dict && !DICT.has(r.word.toLowerCase())) { state = 'Not in the dictionary'; cls = 'bad'; }
+  else if (st.turn.phase === 'counter' && r.score <= st.malice) { state = 'Needs more than ' + st.malice; cls = 'warn'; }
+  return '<p class="preview ' + cls + '"><b class="w">' + esc(r.word) + '</b> · ' + r.score + ' points <span class="st">' + state + '</span></p>';
+}
+function handOrder(hand) {
+  const keep = UI.order.filter(function (id) { return hand.indexOf(id) >= 0; });
+  hand.forEach(function (id) { if (keep.indexOf(id) < 0) keep.push(id); });
+  UI.order = keep;
+  return keep;
+}
+function actionsHTML(st, me, myTurn, composing) {
+  const t = st.turn;
+  const p = st.players[me];
+  if (st.status === 'over') return '';
+  if (!myTurn) {
+    let txt = 'Waiting for ' + esc(st.players[t.seat].name) + '.';
+    if (UI.pending) txt = 'Sending your move to the host…';
+    return '<div class="actions"><p class="muted">' + txt + '</p></div>';
+  }
+  if (composing) {
+    let main = 'Cast Word';
+    if (t.phase === 'counter') main = 'Counter';
+    let h = '<button class="btn" type="button" data-act="cast">' + main + '</button><button class="btn ghost" type="button" data-act="clear">Clear</button><button class="btn ghost" type="button" data-act="shuffle">Shuffle</button>';
+    if (Net.kind === 'practice' && st.settings.coach) h += '<button class="btn ghost" type="button" data-act="hint">Hint</button>';
+    if (t.phase === 'cast') h += '<button class="btn ghost" type="button" data-act="fizzle">I Have No Word</button>';
+    else h += '<button class="btn danger" type="button" data-act="yield">Yield And Break A Seal</button>';
+    return '<div class="actions">' + h + '</div><p class="keys">Keyboard: type letters, Backspace to undo, Enter to cast, Esc to clear.</p>';
+  }
+  if (t.phase === 'tidy') {
+    const extra = p.hand.length - UI.disc.size - HAND;
+    let note = 'Tap glyphs to mark them for discard. You draw back up to ' + HAND + '.';
+    if (extra > 0) note = 'Your hand limit is ' + HAND + '. Mark ' + extra + ' more to discard.';
+    let verb = 'Cast At ';
+    if (st.malice <= 0) verb = 'Challenge ';
+    let btns = '';
+    alive(st).forEach(function (i) {
+      if (i === me) return;
+      let dis = '';
+      if (extra > 0) dis = ' disabled';
+      btns += '<button class="btn" type="button" data-act="target" data-seat="' + i + '"' + dis + '>' + verb + esc(st.players[i].name) + '</button>';
+    });
+    return '<p class="muted">' + note + '</p><div class="actions">' + btns + '</div>';
+  }
+  if (t.phase === 'curse') {
+    let btns = '';
+    alive(st).forEach(function (i) {
+      if (i === me || i === t.from) return;
+      btns += '<button class="btn danger" type="button" data-act="curse" data-seat="' + i + '">Curse ' + esc(st.players[i].name) + '</button>';
+    });
+    return '<div class="actions">' + btns + '</div>';
+  }
+  return '';
+}
+function coachHTML(st, composing) {
+  if (Net.kind !== 'practice' || !st.settings.coach) return '';
+  let body = '';
+  if (composing && UI.hintShown) {
+    const c = UI.coach;
+    if (!c || c.turnId !== st.turn.id) body = 'Searching the dictionary…';
+    else if (!c.best) {
+      if (c.phase === 'counter') body = 'No word here can beat ' + c.need + '. Yielding is your only option.';
+      else body = 'No word can be made from these glyphs. Choose I Have No Word.';
+    } else {
+      let tail = c.count + ' possible words.';
+      if (c.phase === 'counter') tail = c.count + ' words would beat ' + c.need + '.';
+      body = 'Strongest word available: <b class="w">' + c.best.word + '</b> for ' + c.best.score + '. ' + tail;
+    }
+  } else if (UI.coachMsg) body = UI.coachMsg;
+  if (!body) return '';
+  return '<aside class="coach"><span class="eyebrow">Coach</span><p>' + body + '</p></aside>';
+}
+function meHTML(st, me, myTurn, composing) {
+  if (me < 0) return '<section class="me spectate"><h3>Watching</h3><p>You are watching this duel from the gallery.</p></section>';
+  const p = st.players[me];
+  const t = st.turn;
+  if (p.out && st.status === 'playing') return '<section class="me spectate"><h3>You Are Out</h3><p>Watch the rest of the duel from the gallery.</p></section>' + coachHTML(st, false);
+  let head = '<div class="me-head"><div><span class="eyebrow">Your seals</span>' + sealsHTML(p) + '</div>';
+  if (Net.kind === 'hotseat') head = '<div class="me-head"><div><span class="me-name">' + esc(p.name) + '</span>' + sealsHTML(p) + '</div>';
+  if (p.seals >= 1 && !p.giltUsed) {
+    let gsrc = '';
+    let gcls = '';
+    if (composing) { gsrc = 'gilt'; if (UI.compose.some(function (x) { return x.t === p.gilt; })) gcls = 'used'; }
+    head += '<div><span class="eyebrow">Gilded glyph</span>' + glyph(st.tiles[p.gilt], { src: gsrc, id: p.gilt, cls: gcls }) + '</div>';
+  }
+  if (p.seals >= 2) {
+    let c = 'charm';
+    if (p.charmUsed) c += ' spent';
+    let btn = '';
+    if (composing && !p.charmUsed) btn = '<button class="btn small" type="button" data-act="charm">Use Charm</button>';
+    let state = '';
+    if (p.charmUsed) state = ' (spent)';
+    head += '<div class="' + c + '"><span class="eyebrow">Charm' + state + '</span><b>' + CHARMS[p.charm].name + '</b><small>' + CHARMS[p.charm].text + '</small>' + btn + '</div>';
+  }
+  head += '</div>';
+  let comp = '';
+  if (composing) {
+    let slots = '';
+    UI.compose.forEach(function (x, k) {
+      if (x.b) slots += blotGlyph(x.l, { ci: k });
+      else slots += glyph(st.tiles[x.t], { ci: k });
+    });
+    if (!slots) slots = '<span class="ph">Type, or tap glyphs, to spell a word</span>';
+    comp = '<div class="composer" id="composer" aria-label="Your word">' + slots + '</div>' + previewHTML(st, me);
+  }
+  let hand = '';
+  handOrder(p.hand).forEach(function (id) {
+    let c = '';
+    let src = '';
+    if (composing) { src = 'hand'; if (UI.compose.some(function (x) { return x.t === id; })) c = 'used'; }
+    else if (myTurn && t.phase === 'tidy') { src = 'hand'; if (UI.disc.has(id)) c = 'disc'; }
+    hand += glyph(st.tiles[id], { src: src, id: id, cls: c });
+  });
+  if (!hand) hand = '<span class="muted">No glyphs in hand.</span>';
+  if (Net.kind === 'hotseat' && t && t.waiting) {
+    hand = '';
+    p.hand.forEach(function () { hand += '<span class="back" style="width:30px;height:40px"></span>'; });
+  }
+  let cls = 'me';
+  if (myTurn) cls += ' turn';
+  return '<section class="' + cls + '">' + head + comp + '<div><span class="eyebrow">Your hand</span><div class="hand">' + hand + '</div></div>' + actionsHTML(st, me, myTurn, composing) + coachHTML(st, composing) + '</section>';
+}
+function logHTML(st) {
+  let items = '';
+  st.log.slice(-40).reverse().forEach(function (e) { items += '<li class="k-' + esc(e.k) + '">' + esc(e.txt) + '</li>'; });
+  return '<aside class="chron" aria-label="Chronicle"><h3>Chronicle</h3><ol>' + items + '</ol></aside>';
+}
+function renderGame() {
+  const st = S;
+  const t = st.turn;
+  const me = mySeat();
+  let myTurn = false;
+  if (st.status === 'playing' && t && me >= 0 && t.seat === me && !t.waiting && !st.players[me].out) myTurn = true;
+  const composing = myTurn && (t.phase === 'cast' || t.phase === 'counter');
+  const fresh = !!st.ev && st.ev.n !== UI.lastEv;
+  let rivals = '';
+  st.players.forEach(function (p, i) { if (i !== me) rivals += rivalHTML(st, p, i, fresh); });
+  $('#screen').innerHTML = '<div class="game"><div class="board"><section class="rivals">' + rivals + '</section>' + tableHTML(st, me, composing, fresh) + meHTML(st, me, myTurn, composing) + '</div>' + logHTML(st) + '</div>';
+  if (st.ev) UI.lastEv = st.ev.n;
+  tickTimer();
+}
+function renderCover() {
+  const c = $('#cover');
+  const show = Net.kind === 'hotseat' && S && S.status === 'playing' && S.turn && S.turn.waiting;
+  if (!show) { c.hidden = true; c.innerHTML = ''; return; }
+  const p = S.players[S.turn.seat];
+  let what = 'make an opening cast';
+  if (S.turn.phase === 'counter') { if (S.malice > 0) what = 'beat ' + S.word + ' (' + S.malice + ')'; else what = 'spell any word'; }
+  else if (S.turn.phase === 'curse') what = 'place a Parting Curse';
+  c.hidden = false;
+  c.innerHTML = '<div class="sheet cover-card"><span class="eyebrow">Pass the screen</span><h2>' + esc(p.name) + '</h2><p>Your turn to ' + esc(what) + '. Everyone else, look away.</p><button class="btn" type="button" data-act="ready">Show My Glyphs</button></div>';
+}
+function tickTimer() {
+  const el = document.getElementById('sand');
+  const tx = document.getElementById('sandText');
+  if (!el || !tx || !S || !S.turn) return;
+  const t = S.turn;
+  if (S.status !== 'playing') { el.style.setProperty('--pct', '0%'); tx.textContent = ''; return; }
+  if (t.waiting) { el.style.setProperty('--pct', '100%'); tx.textContent = 'Ready'; el.classList.remove('low'); return; }
+  if (!t.deadline) { el.style.setProperty('--pct', '100%'); tx.textContent = 'No timer'; el.classList.remove('low'); return; }
+  const left = Math.max(0, t.deadline + UI.skew - Date.now());
+  let pct = 100;
+  if (t.limit) pct = Math.min(100, left / t.limit * 100);
+  el.style.setProperty('--pct', pct + '%');
+  if (left < 10000 && (t.phase === 'cast' || t.phase === 'counter')) el.classList.add('low');
+  else el.classList.remove('low');
+  tx.textContent = Math.ceil(left / 1000) + ' s';
+}
+
+const RULES_HTML =
+  '<div class="sheet" role="dialog" aria-label="Rules"><button class="btn ghost small close" type="button" data-act="close-rules">Close</button>' +
+  '<h2>How To Play</h2>' +
+  '<p>Every duellist starts with 5 glyphs and three wax seals. Lose an exchange and a seal breaks. Lose all three and you are out. The last duellist standing wins.</p>' +
+  '<h3>An Exchange</h3><ol>' +
+  '<li><b>Opening cast.</b> The caster spells a word of 3 or more letters using their own glyphs. The total points set the Malice. If they cannot find one, they open at 0.</li>' +
+  '<li><b>Aim.</b> The caster discards any glyphs they do not want, draws back to 5, and casts the word at any rival still in the duel.</li>' +
+  '<li><b>Counter.</b> The target must spell a word worth more than the Malice before the sand runs out. They may use their own glyphs, the gilded glyph if revealed, the shared Inkblot, and every glyph in the word cast at them. A tie is not enough.</li>' +
+  '<li><b>Success.</b> The counter becomes the new cast. Glyphs from the old word that were not reused are discarded. The successful player tidies their hand and aims at anyone, even straight back.</li>' +
+  '<li><b>Failure.</b> If the target yields or the sand runs out, one of their seals breaks. The table is cleared and they make the next opening cast.</li></ol>' +
+  '<h3>The Seals</h3><ul>' +
+  '<li><b>I, Gilt Seal.</b> Reveals a gilded glyph worth extra points. You may add it to any later word. Once played it sits on the table for others to borrow, then leaves the game.</li>' +
+  '<li><b>II, Charm Seal.</b> Reveals a charm you may use once, during any turn where you are spelling.</li>' +
+  '<li><b>III, Final Seal.</b> You leave the duel, but first you choose a rival, other than the one who broke your seal, to face the word that beat you. They must counter it as normal. With nobody to curse, you simply leave.</li></ul>' +
+  '<h3>The Charms</h3><ul>' + CHARM_KEYS.map(function (k) { return '<li><b>' + CHARMS[k].name + '.</b> ' + CHARMS[k].text + '</li>'; }).join('') + '</ul>' +
+  '<h3>Words</h3><p>Words must have 3 or more letters and appear in the built-in dictionary of about 168,000 English words. Names, abbreviations and acronyms are not allowed. The Inkblot can stand for any letter but always scores 0.</p>' +
+  '<h3>Controls</h3><p>Type letters to pick glyphs automatically, choosing your highest-value glyph for each letter. If no glyph matches, the Inkblot is used. Backspace removes the last letter, Enter casts, and Esc clears. You can also tap glyphs, and tap a glyph in your word to remove it.</p>' +
+  '</div>';
+function openRules() { const r = $('#rules'); r.innerHTML = RULES_HTML; r.hidden = false; const b = r.querySelector('.close'); if (b) b.focus(); }
+function closeRules() { const r = $('#rules'); r.hidden = true; r.innerHTML = ''; }
+
+/* ---------- Input ---------- */
+
+function addLetter(L) {
+  const me = mySeat();
+  const items = availableFor(S, me).filter(function (it) { return it.l === L && !UI.compose.some(function (x) { return x.t === it.id; }); });
+  if (items.length) {
+    items.sort(function (a, b) { return (b.v - a.v) || (Number(a.own) - Number(b.own)); });
+    UI.compose.push({ t: items[0].id });
+  } else if (blotsLeft() > 0) {
+    UI.compose.push({ b: 1, l: L });
+  } else {
+    nudge('No ' + L + ' available, and your Inkblot is already used.');
+    return;
+  }
+  render();
+}
+function nudge(msg) {
+  const c = document.getElementById('composer');
+  if (c) { c.classList.remove('nudge'); void c.offsetWidth; c.classList.add('nudge'); }
+  if (msg) toast(msg);
+}
+function doCast() {
+  const me = mySeat();
+  const spec = specFromCompose();
+  const chk = checkWord(S, me, spec);
+  if (!chk.ok) { nudge(chk.error); return; }
+  dispatch({ type: 'submit', seat: me, spec: spec });
+}
+function composingNow() {
+  if (!S || S.status !== 'playing' || !S.turn) return false;
+  const t = S.turn;
+  const me = mySeat();
+  if (me < 0 || t.seat !== me || t.waiting || S.players[me].out) return false;
+  return t.phase === 'cast' || t.phase === 'counter';
+}
+function onGlyph(src, id) {
+  const me = mySeat();
+  const t = S && S.turn;
+  if (!t || t.seat !== me || t.waiting) return;
+  if (src === 'blot') {
+    if (!composingNow()) return;
+    if (blotsLeft() > 0) { UI.picker = !UI.picker; render(); }
+    else toast('Your Inkblot is already in the word. Tap it there to remove it.');
+    return;
+  }
+  if (t.phase === 'tidy' && src === 'hand') {
+    if (UI.disc.has(id)) UI.disc.delete(id);
+    else UI.disc.add(id);
+    render();
+    return;
+  }
+  if (!composingNow()) return;
+  const k = UI.compose.findIndex(function (x) { return x.t === id; });
+  if (k >= 0) UI.compose.splice(k, 1);
+  else UI.compose.push({ t: id });
+  render();
+}
+function pickBlot(L) {
+  UI.picker = false;
+  if (composingNow() && blotsLeft() > 0) UI.compose.push({ b: 1, l: L });
+  render();
+}
+function copyInvite() {
+  let text = Net.code;
+  if (Net.transport && Net.transport.kind === 'peer' && /^https?:$/.test(location.protocol)) text = location.href.split('#')[0] + '#join-' + Net.code;
+  const done = function () { toast('Copied: ' + text); };
+  try {
+    navigator.clipboard.writeText(text).then(done, function () { toast('Copy failed. The code is ' + Net.code + '.'); });
+  } catch (e) { toast('The code is ' + Net.code + '.'); }
+}
+function handleAct(act, el) {
+  if (act === 'practice-start') startPractice();
+  else if (act === 'hotseat-start') startHotseat();
+  else if (act === 'hs-add') { readHsNames(); if (UI.hsNames.length < 5) UI.hsNames.push('Player ' + (UI.hsNames.length + 1)); renderHsNames(); }
+  else if (act === 'hs-remove') { readHsNames(); if (UI.hsNames.length > 2) UI.hsNames.splice(Number(el.dataset.i), 1); renderHsNames(); }
+  else if (act === 'online-create') onlineCreate();
+  else if (act === 'online-join') onlineJoin();
+  else if (act === 'resume') onlineResume(el.dataset.code);
+  else if (act === 'rules') openRules();
+  else if (act === 'close-rules') closeRules();
+  else if (act === 'add-bot') { const s = document.getElementById('lb-level'); if (s) UI.botLevel = s.value; applyAction({ type: 'addBot', level: UI.botLevel }, false); }
+  else if (act === 'remove-player') applyAction({ type: 'removePlayer', index: Number(el.dataset.i) }, false);
+  else if (act === 'start') applyAction({ type: 'start' }, false);
+  else if (act === 'again') applyAction({ type: 'again' }, false);
+  else if (act === 'copy-code') copyInvite();
+  else if (act === 'leave-ask') {
+    if (UI.confirmLeave) { leaveGame(); return; }
+    UI.confirmLeave = true;
+    renderTop();
+    setTimeout(function () { UI.confirmLeave = false; renderTop(); }, 3000);
+  }
+  else if (act === 'leave') leaveGame();
+  else if (act === 'cast') doCast();
+  else if (act === 'clear') { UI.compose = []; UI.picker = false; render(); }
+  else if (act === 'shuffle') { UI.order = shuffle(UI.order.slice()); render(); }
+  else if (act === 'hint') { UI.hintShown = true; UI.coachKey = ''; updateCoach(); render(); }
+  else if (act === 'fizzle') dispatch({ type: 'fizzle', seat: mySeat() });
+  else if (act === 'yield') dispatch({ type: 'yield', seat: mySeat() });
+  else if (act === 'charm') dispatch({ type: 'charm', seat: mySeat() });
+  else if (act === 'target') dispatch({ type: 'tidy', seat: mySeat(), discard: Array.from(UI.disc), target: Number(el.dataset.seat) });
+  else if (act === 'curse') dispatch({ type: 'curse', seat: mySeat(), target: Number(el.dataset.seat) });
+  else if (act === 'ready') { if (S && S.turn) dispatch({ type: 'ready', seat: S.turn.seat }); }
+}
+document.addEventListener('click', function (e) {
+  if (e.target.id === 'rules') { closeRules(); return; }
+  const el = e.target.closest('[data-act],[data-src],[data-ci],[data-pick]');
+  if (!el) {
+    if (UI.picker && !e.target.closest('.picker')) { UI.picker = false; render(); }
+    return;
+  }
+  if (el.disabled) return;
+  if (el.dataset.pick) { pickBlot(el.dataset.pick); return; }
+  if (el.dataset.ci !== undefined) { UI.compose.splice(Number(el.dataset.ci), 1); render(); return; }
+  if (el.dataset.src) { onGlyph(el.dataset.src, Number(el.dataset.id)); return; }
+  handleAct(el.dataset.act, el);
+});
+document.addEventListener('change', function (e) {
+  const id = e.target.id;
+  if (id === 'lb-timer') applyAction({ type: 'settings', timer: Number(e.target.value) }, false);
+  else if (id === 'lb-dict') applyAction({ type: 'settings', dict: e.target.checked }, false);
+  else if (id === 'lb-level') UI.botLevel = e.target.value;
+});
+document.addEventListener('keydown', function (e) {
+  const tag = e.target && e.target.tagName;
+  if (e.key === 'Escape' && !$('#rules').hidden) { closeRules(); return; }
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+    if (e.key === 'Enter' && e.target.id === 'on-code') onlineJoin();
+    return;
+  }
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (UI.screen !== 'game' || !S || S.status !== 'playing') return;
+  const t = S.turn;
+  if (Net.kind === 'hotseat' && t.waiting && e.key === 'Enter') { e.preventDefault(); dispatch({ type: 'ready', seat: t.seat }); return; }
+  if (!composingNow()) return;
+  if (/^[a-zA-Z]$/.test(e.key)) {
+    e.preventDefault();
+    const L = e.key.toUpperCase();
+    if (UI.picker) { pickBlot(L); return; }
+    addLetter(L);
+    return;
+  }
+  if (e.key === 'Backspace') { e.preventDefault(); UI.compose.pop(); render(); return; }
+  if (e.key === 'Enter') { e.preventDefault(); doCast(); return; }
+  if (e.key === 'Escape') { UI.compose = []; UI.picker = false; render(); }
+});
+
+setInterval(function () {
+  tickTimer();
+  if (UI.pending && Date.now() - UI.pending > 8000) { UI.pending = 0; toast('No answer from the host yet. They may have lost their connection.', 'bad'); render(); }
+  if (Net.mode === 'guest' || !S || S.status !== 'playing') return;
+  const t = S.turn;
+  if (!t || t.waiting || !t.deadline) return;
+  let grace = 400;
+  if (Net.mode === 'host') grace = 1500;
+  if (Date.now() > t.deadline + grace) applyAction({ type: 'timeout', turnId: t.id }, true);
+}, 200);
+
+window.__inkmalice = { peek: function () { return { S: S, me: mySeat(), net: Net.mode, kind: Net.kind }; }, setBotSpeed: function (s) { botSpeed = s; }, WORDS: function () { return WORDS; }, reduce: reduce, newGame: newGame, botAction: botAction, checkWord: checkWord, searchWords: searchWords, availableFor: availableFor, ensureWords: ensureWords, alive: alive, HAND: HAND, DICT: DICT };
+
+render();
+setTimeout(ensureWords, 60);
+if (ONLINE.env === 'cloud-pending') initCloud();
+})();
+</script>
