@@ -5,6 +5,7 @@ const mock = require("./mockclaude.js");
 const mode = process.argv[2] || "peer";
 let url = "http://localhost:8790/index.html";
 if (mode === "cloud") url = "http://localhost:8790/artifact.html";
+if (process.argv[3]) url = process.argv[3];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function playBoth(pages, errors, maxSteps) {
